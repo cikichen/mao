@@ -1,0 +1,38 @@
+# 环境变量和配置文件
+.env
+.env.local
+.env.development
+.env.production
+config.local.js
+config.private.js
+
+# API 密钥文件
+**/api-keys.js
+**/secrets.js
+**/private-config.js
+
+# 日志文件
+*.log
+logs/
+
+# 依赖目录
+node_modules/
+npm-debug.log*
+
+# 构建输出
+dist/
+build/
+
+# IDE 文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
