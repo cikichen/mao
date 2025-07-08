@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>毛主席生平足迹地图 - 跟着教员走遍中国</title>
+    <meta name="description" content="通过交互式动态地图展示毛泽东主席1893-1976年波澜壮阔的一生足迹，包含重要文章和诗词，让历史活起来">
+    <meta name="keywords" content="毛泽东,毛主席,足迹地图,历史,诗词,文章,中国历史">
+    
+    <!-- 引入配置文件 -->
+    <script src="config.js"></script>
+
+    <!-- 引入地图API -->
+    <script id="amapScript"></script>
+    
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- 引入Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+</head>
+<body>
+    <!-- 页面加载动画 -->
+    <div id="loading" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>正在加载历史足迹...</h2>
+            <p>让我们一起追随伟人的脚步</p>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div id="app" class="app-container">
+        <!-- 顶部导航栏 -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h1>毛主席生平足迹地图</h1>
+                </div>
+                <nav class="nav-menu">
+                    <button class="nav-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                        <span>搜索</span>
+                    </button>
+                    <button class="nav-btn" id="filterBtn">
+                        <i class="fas fa-filter"></i>
+                        <span>筛选</span>
+                    </button>
+                    <button class="nav-btn" id="infoBtn">
+                        <i class="fas fa-info-circle"></i>
+                        <span>说明</span>
+                    </button>
+                    <div class="map-selector-container">
+                        <button class="nav-btn" id="mapSelectBtn">
+                            <i class="fas fa-map"></i>
+                            <span>地图</span>
+                        </button>
+                        <div id="mapProviderDropdown" class="map-provider-dropdown">
+                            <div class="map-provider-dropdown-item" data-value="leaflet">Leaflet (OpenStreetMap)</div>
+                            <div class="map-provider-dropdown-item" data-value="amap">高德地图</div>
+                        </div>
+                        <select id="hiddenMapProviderSelect" style="display: none;">
+                            <option value="leaflet">Leaflet (OpenStreetMap)</option>
+                            <option value="amap">高德地图</option>
+                        </select>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 地图容器 -->
+            <div id="mapContainer" class="map-container">
+                <div id="map" class="map"></div>
+                
+                <!-- 地图控制按钮 -->
+                <div class="map-controls">
+                    <button class="control-btn" id="centerBtn" title="回到中心">
+                        <i class="fas fa-crosshairs"></i>
+                    </button>
+                    <button class="control-btn" id="fullscreenBtn" title="全屏">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 侧边栏 -->
+            <aside id="sidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <h3>事件详情</h3>
+                    <button class="close-btn" id="closeSidebar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="sidebar-content" id="sidebarContent">
+                    <div class="welcome-message">
+                        <i class="fas fa-hand-point-left"></i>
+                        <p>点击地图上的标记点查看详细信息</p>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- 时间轴控制器 -->
+        <div class="timeline-container">
+            <div class="timeline-header">
+                <div class="timeline-info">
+                    <span class="current-year" id="currentYear">1893</span>
+                    <span class="current-age" id="currentAge">0岁</span>
+                </div>
+                <div class="timeline-controls">
+                    <button class="timeline-btn" id="prevBtn" title="上一个事件">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="timeline-btn play-btn" id="playBtn" title="播放/暂停">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="timeline-btn" id="nextBtn" title="下一个事件">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <div class="speed-control">
+                        <label for="speedSlider">速度:</label>
+                        <input type="range" id="speedSlider" min="0.5" max="3" step="0.5" value="1">
+                        <span id="speedValue">1x</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-track">
+                <div class="timeline-progress" id="timelineProgress"></div>
+                <input type="range" id="timelineSlider" class="timeline-slider" min="0" max="100" value="0">
+                <div class="timeline-markers" id="timelineMarkers"></div>
+            </div>
+            
+            <div class="timeline-labels">
+                <span>1893</span>
+                <span>1976</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜索模态框 -->
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>搜索历史事件</h3>
+                <button class="close-btn" id="closeSearchModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="搜索地点、事件、文章或诗词...">
+                    <button id="searchSubmit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 筛选模态框 -->
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>筛选条件</h3>
+                <button class="close-btn" id="closeFilterModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="filter-group">
+                    <h4>事件类型</h4>
+                    <label><input type="checkbox" value="historical" checked> 历史事件</label>
+                    <label><input type="checkbox" value="article" checked> 重要文章</label>
+                    <label><input type="checkbox" value="poem" checked> 诗词作品</label>
+                </div>
+                <div class="filter-group">
+                    <h4>时间范围</h4>
+                    <input type="range" id="yearRangeStart" min="1893" max="1976" value="1893">
+                    <input type="range" id="yearRangeEnd" min="1893" max="1976" value="1976">
+                    <div class="year-display">
+                        <span id="yearStart">1893</span> - <span id="yearEnd">1976</span>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button id="applyFilter" class="btn-primary">应用筛选</button>
+                    <button id="resetFilter" class="btn-secondary">重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 说明模态框 -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>使用说明</h3>
+                <button class="close-btn" id="closeInfoModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="info-section">
+                    <h4><i class="fas fa-mouse-pointer"></i> 基本操作</h4>
+                    <ul>
+                        <li>点击地图标记查看事件详情</li>
+                        <li>拖拽时间轴快速定位到特定年份</li>
+                        <li>使用播放按钮观看历史足迹动画</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h4><i class="fas fa-keyboard"></i> 快捷键</h4>
+                    <ul>
+                        <li><kbd>空格</kbd> - 播放/暂停</li>
+                        <li><kbd>←</kbd> / <kbd>→</kbd> - 上一个/下一个事件</li>
+                        <li><kbd>Home</kbd> / <kbd>End</kbd> - 跳转到起点/终点</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h4><i class="fas fa-palette"></i> 标记说明</h4>
+                    <ul>
+                        <li><span class="marker-demo historical"></span> 历史事件</li>
+                        <li><span class="marker-demo article"></span> 重要文章</li>
+                        <li><span class="marker-demo poem"></span> 诗词作品</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h4><i class="fas fa-heart"></i> 特色功能</h4>
+                    <ul>
+                        <li>🎬 时间轴动画播放历史进程</li>
+                        <li>🔍 智能搜索历史事件和内容</li>
+                        <li>🎯 多维度筛选和定位功能</li>
+                        <li>📱 完美适配移动端设备</li>
+                        <li>💾 收藏喜欢的历史事件</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h4><i class="fas fa-info-circle"></i> 关于项目</h4>
+                    <p>本项目基于开源项目 mao-map 进行增强开发，旨在通过现代化的交互方式展示毛主席的生平足迹，让历史更加生动有趣。</p>
+                    <p>数据来源于公开的历史资料，如有错误欢迎指正。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js?v=26"></script>
+    <!-- 分文件加载事件数据 -->
+    <script src="js/events-historical.js?v=26"></script>
+    <script src="js/events-post-1949.js?v=26"></script>
+    <script src="js/events-poems.js?v=26"></script>
+    <script src="js/events-articles.js?v=26"></script>
+    <script src="js/events-data-merged.js?v=26"></script>
+    <script src="js/data.js?v=26"></script>
+    <script src="js/amap-map-manager.js?v=26"></script>
+    <script src="js/leaflet-map-manager.js?v=26"></script>
+    <script src="js/timeline.js?v=26"></script>
+    <script src="js/sidebar.js?v=26"></script>
+    <script src="js/search.js?v=26"></script>
+    <script src="js/filter.js?v=26"></script>
+    <script src="js/main.js?v=26"></script>
+</body>
+</html>

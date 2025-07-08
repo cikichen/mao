@@ -1,0 +1,7 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#2d2d2d"/>
+  <text x="200" y="140" font-family="Arial, sans-serif" font-size="16" fill="#999" text-anchor="middle">历史图片</text>
+  <text x="200" y="170" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">暂无图片资源</text>
+  <circle cx="200" cy="100" r="30" fill="none" stroke="#666" stroke-width="2"/>
+  <path d="M185 90 L215 90 M200 75 L200 105 M190 110 L210 110" stroke="#666" stroke-width="2" fill="none"/>
+</svg>

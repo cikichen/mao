@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>测试页面 - 验证语法修复</title>
+</head>
+<body>
+    <h1>测试页面</h1>
+    <div id="status">正在加载...</div>
+    
+    <script>
+        document.getElementById('status').textContent = '开始加载脚本...';
+    </script>
+    
+    <!-- 测试脚本加载 -->
+    <script src="js/amap-map-manager.js?v=8&t=1735711000"></script>
+    <script src="js/leaflet-map-manager.js?v=8&t=1735711000"></script>
+    <script src="js/main.js?v=8&t=1735711000"></script>
+    
+    <script>
+        // 测试类是否正确加载
+        try {
+            const amapManager = new AMapManager();
+            const leafletManager = new LeafletMapManager();
+            const app = new MaoMapApp();
+            
+            document.getElementById('status').innerHTML = `
+                <div style="color: green;">✅ 所有类加载成功！</div>
+                <div>AMapManager: ${typeof AMapManager}</div>
+                <div>LeafletMapManager: ${typeof LeafletMapManager}</div>
+                <div>MaoMapApp: ${typeof MaoMapApp}</div>
+            `;
+        } catch (error) {
+            document.getElementById('status').innerHTML = `
+                <div style="color: red;">❌ 加载失败: ${error.message}</div>
+            `;
+        }
+    </script>
+</body>
+</html>

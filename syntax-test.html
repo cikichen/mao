@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>语法测试页面</title>
+</head>
+<body>
+    <h1>语法测试页面</h1>
+    <div id="status">正在测试...</div>
+    
+    <script>
+        document.getElementById('status').textContent = '开始加载脚本...';
+        console.log('开始语法测试');
+    </script>
+    
+    <!-- 测试main.js -->
+    <script src="js/main.js?v=17"></script>
+    
+    <script>
+        try {
+            // 测试类是否正确加载
+            const app = new MaoMapApp();
+            
+            document.getElementById('status').innerHTML = `
+                <div style="color: green;">✅ main.js 加载成功！</div>
+                <div>MaoMapApp: ${typeof MaoMapApp}</div>
+            `;
+            console.log('✅ 语法测试通过');
+        } catch (error) {
+            document.getElementById('status').innerHTML = `
+                <div style="color: red;">❌ 语法错误: ${error.message}</div>
+            `;
+            console.error('❌ 语法测试失败:', error);
+        }
+    </script>
+</body>
+</html>
