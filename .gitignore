@@ -5,6 +5,7 @@
 .env.production
 config.local.js
 config.private.js
+js/config.local.js
 
 # API 密钥文件
 **/api-keys.js

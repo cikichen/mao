@@ -5,9 +5,9 @@
 
 // 高德地图API配置
 window.AMAP_CONFIG = {
-    // 在这里填入你的高德地图API密钥
-    // 获取方式：https://lbs.amap.com/
-    key: 'YOUR_AMAP_API_KEY_HERE', // 请在这里填入你的高德地图API密钥
+    // API密钥从本地配置文件获取
+    // 请确保已创建 config.local.js 文件（参考 config.local.example.js）
+    key: window.LOCAL_CONFIG?.AMAP_API_KEY || 'YOUR_AMAP_API_KEY_HERE',
     
     // API版本
     version: '1.4.15',

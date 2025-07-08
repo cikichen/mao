@@ -11,6 +11,9 @@
     <meta name="keywords" content="毛泽东,毛主席,足迹地图,历史,诗词,文章,中国历史">
     
     <!-- 引入配置文件 -->
+    <!-- 先加载本地配置（如果存在） -->
+    <script src="config.local.js" onerror="console.log('本地配置文件不存在，使用默认配置')"></script>
+    <!-- 再加载主配置文件 -->
     <script src="config.js"></script>
 
     <!-- 引入地图API -->

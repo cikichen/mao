@@ -7,8 +7,8 @@
 const CONFIG = {
     // 地图配置
     map: {
-        // 高德地图API密钥 (从配置文件获取)
-        amapKey: window.AMAP_CONFIG?.key || 'YOUR_AMAP_API_KEY_HERE',
+        // 高德地图API密钥 (从本地配置文件获取)
+        amapKey: window.LOCAL_CONFIG?.AMAP_API_KEY || window.AMAP_CONFIG?.key || 'YOUR_AMAP_API_KEY_HERE',
         
         // 默认地图中心点 (中国地理中心)
         center: [104.195397, 35.86166],
