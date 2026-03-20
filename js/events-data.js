@@ -3,7 +3,7 @@
  * 避免CORS问题，将JSON数据内嵌到JavaScript文件中
  */
 
-window.EVENTS_DATA = [
+export const eventsData = [
   {
     "id": "1893-12-26-birth",
     "date": "1893-12-26",
@@ -459,4 +459,4 @@ window.EVENTS_DATA = [
   }
 ];
 
-console.log('事件数据已加载:', window.EVENTS_DATA.length, '个事件');
+console.log('事件数据已加载:', eventsData.length, '个事件');

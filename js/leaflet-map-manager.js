@@ -1,4 +1,4 @@
-class LeafletMapManager {
+export default class LeafletMapManager {
     constructor() {
         this.map = null;
         this.markers = new Map();
@@ -9,7 +9,7 @@ class LeafletMapManager {
         this.eventListeners = new Map();
     }
 
-    async initMap(containerId) {
+    async initMap(containerOrId) {
         console.log("LeafletMapManager: initMap called");
 
         // 检查是否已经初始化过
@@ -18,10 +18,17 @@ class LeafletMapManager {
             return;
         }
 
-        // 检查容器是否存在
-        const container = document.getElementById(containerId);
-        if (!container) {
-            throw new Error(`Map container with id '${containerId}' not found`);
+        // 获取容器元素
+        let container;
+        if (typeof containerOrId === 'string') {
+            container = document.getElementById(containerOrId);
+            if (!container) {
+                throw new Error(`Map container with id '${containerOrId}' not found`);
+            }
+        } else if (containerOrId instanceof HTMLElement) {
+            container = containerOrId;
+        } else {
+            throw new Error('Invalid map container: must be a string ID or HTMLElement');
         }
 
         // 检查容器是否已经被Leaflet使用
@@ -36,7 +43,7 @@ class LeafletMapManager {
         const birthPlaceCenter = [27.915456, 112.527621]; // 韶山坐标
         const initialZoom = 8; // 使用较高的缩放级别显示更多细节
 
-        this.map = L.map(containerId, {
+        this.map = L.map(container, {
             center: birthPlaceCenter,
             zoom: initialZoom,
             zoomControl: true,
@@ -63,13 +70,28 @@ class LeafletMapManager {
     addEventMarkers(events) {
         // TODO: Implement adding markers for Leaflet
         console.log("LeafletMapManager: addEventMarkers called");
+        this.clearMarkers();
         events.forEach(event => {
             if (!event.coordinates || isNaN(event.coordinates.lng) || isNaN(event.coordinates.lat)) return;
             const marker = L.marker([event.coordinates.lat, event.coordinates.lng]).addTo(this.map);
             marker.bindPopup(event.title);
+            marker.on('click', () => this.emit('markerClick', event));
             this.markers.set(event.id, marker);
         });
         // this.map.fitBounds(this.markers.values().map(m => m.getLatLng())); // Need to collect all latlngs
+    }
+
+    clearMarkers() {
+        if (!this.map || !this.markers.size) {
+            this.markers.clear();
+            return;
+        }
+        this.markers.forEach(marker => {
+            if (marker && this.map.removeLayer) {
+                this.map.removeLayer(marker);
+            }
+        });
+        this.markers.clear();
     }
 
     centerToEvent(event) {
@@ -147,7 +169,7 @@ class LeafletMapManager {
                 }
                 // 根据距离自动调整移动速度：远距离移动更快
                 totalDuration = Math.max(3000, Math.min(5000, distance * 0.002));
-                console.log(`远距离移动 ${Math.round(distance/1000)}km，缩小到级别 ${targetZoom}，时长 ${totalDuration}ms`);
+                console.log(`远距离移动 ${Math.round(distance / 1000)}km，缩小到级别 ${targetZoom}，时长 ${totalDuration}ms`);
             } else if (distance < 10000) { // < 10km：街道级视图
                 needsZoom = true;
                 targetZoom = Math.max(14, Math.min(16, currentZoom + 2)); // 拉近到14-16级，看到街道
@@ -159,13 +181,13 @@ class LeafletMapManager {
                 targetZoom = Math.max(10, Math.min(12, currentZoom)); // 保持10-12级
                 // 中短距离移动适中速度
                 totalDuration = Math.max(2000, Math.min(3000, distance * 0.02));
-                console.log(`中短距离移动 ${Math.round(distance/1000)}km，区域级别 ${targetZoom}，时长 ${totalDuration}ms`);
+                console.log(`中短距离移动 ${Math.round(distance / 1000)}km，区域级别 ${targetZoom}，时长 ${totalDuration}ms`);
             } else { // 100-500km：保持适中视野
                 needsZoom = true;
                 targetZoom = Math.max(8, Math.min(10, currentZoom)); // 保持8-10级
                 // 中距离移动较快
                 totalDuration = Math.max(2500, Math.min(4000, distance * 0.005));
-                console.log(`中距离移动 ${Math.round(distance/1000)}km，适中级别 ${targetZoom}，时长 ${totalDuration}ms`);
+                console.log(`中距离移动 ${Math.round(distance / 1000)}km，适中级别 ${targetZoom}，时长 ${totalDuration}ms`);
             }
 
             // 分阶段时间分配（为等待瓦片加载预留时间）

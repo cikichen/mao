@@ -1,0 +1,58 @@
+{
+  "name": "mao-map-enhanced",
+  "version": "2.1.0",
+  "description": "毛主席生平足迹地图 - 通过交互式动态地图展示毛泽东主席1893-1976年波澜壮阔的一生足迹",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "start": "npm run dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint js/**/*.js",
+    "lint:fix": "eslint js/**/*.js --fix",
+    "format": "prettier --write \"**/*.{js,css,html,md}\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "version:bump": "npm version patch",
+    "deploy": "npm run build && npm run deploy:gh-pages",
+    "deploy:gh-pages": "gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/mao-map-enhanced.git"
+  },
+  "keywords": [
+    "毛泽东",
+    "毛主席",
+    "足迹地图",
+    "历史",
+    "诗词",
+    "文章",
+    "中国历史",
+    "timeline"
+  ],
+  "author": "Your Name",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "clean-css-cli": "^5.6.2",
+    "eslint": "^8.50.0",
+    "gh-pages": "^6.0.0",
+    "prettier": "^3.0.3",
+    "terser": "^5.20.0",
+    "vite": "^7.2.2",
+    "vite-plugin-static-copy": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "dependencies": {
+    "pinia": "^3.0.4",
+    "vue": "^3.5.24"
+  }
+}

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,29 +10,34 @@
     <title>毛主席生平足迹地图 - 跟着教员走遍中国</title>
     <meta name="description" content="通过交互式动态地图展示毛泽东主席1893-1976年波澜壮阔的一生足迹，包含重要文章和诗词，让历史活起来">
     <meta name="keywords" content="毛泽东,毛主席,足迹地图,历史,诗词,文章,中国历史">
-    
-    <!-- 引入配置文件 -->
-    <!-- 先加载本地配置（如果存在） -->
-    <script src="config.local.js" onerror="console.log('本地配置文件不存在，使用默认配置')"></script>
-    <!-- 再加载主配置文件 -->
-    <script src="config.js"></script>
+
+    <!-- 引入本地配置（可选） -->
+    <script src="/config.local.js"></script>
 
     <!-- 引入地图API -->
     <script id="amapScript"></script>
-    
+
     <!-- 引入样式文件 -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="">
+
+    <!-- CSS Files -->
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/variables-compatibility.css">
     <link rel="stylesheet" href="css/timeline.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/animations.css">
-    
+
     <!-- 引入图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <!-- 引入Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
 </head>
+
 <body>
     <!-- 页面加载动画 -->
     <div id="loading" class="loading-overlay">
@@ -87,7 +93,7 @@
             <!-- 地图容器 -->
             <div id="mapContainer" class="map-container">
                 <div id="map" class="map"></div>
-                
+
                 <!-- 地图控制按钮 -->
                 <div class="map-controls">
                     <button class="control-btn" id="centerBtn" title="回到中心">
@@ -140,13 +146,13 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="timeline-track">
                 <div class="timeline-progress" id="timelineProgress"></div>
                 <input type="range" id="timelineSlider" class="timeline-slider" min="0" max="100" value="0">
                 <div class="timeline-markers" id="timelineMarkers"></div>
             </div>
-            
+
             <div class="timeline-labels">
                 <span>1893</span>
                 <span>1976</span>
@@ -261,21 +267,7 @@
     </div>
 
     <!-- 引入JavaScript文件 -->
-    <script src="js/config.js"></script>
-    <script src="js/utils.js?v=26"></script>
-    <!-- 分文件加载事件数据 -->
-    <script src="js/events-historical.js?v=26"></script>
-    <script src="js/events-post-1949.js?v=26"></script>
-    <script src="js/events-poems.js?v=26"></script>
-    <script src="js/events-articles.js?v=26"></script>
-    <script src="js/events-data-merged.js?v=26"></script>
-    <script src="js/data.js?v=26"></script>
-    <script src="js/amap-map-manager.js?v=26"></script>
-    <script src="js/leaflet-map-manager.js?v=26"></script>
-    <script src="js/timeline.js?v=26"></script>
-    <script src="js/sidebar.js?v=26"></script>
-    <script src="js/search.js?v=26"></script>
-    <script src="js/filter.js?v=26"></script>
-    <script src="js/main.js?v=26"></script>
+    <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>

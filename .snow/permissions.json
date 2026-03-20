@@ -1,0 +1,17 @@
+{
+  "alwaysApprovedTools": [
+    "filesystem-read",
+    "terminal-execute",
+    "websearch-fetch",
+    "fetch-mcp-fetch",
+    "filesystem-create",
+    "notebook-add",
+    "websearch-search",
+    "ace-tool-search_context",
+    "ace-file_outline",
+    "ace-semantic_search",
+    "ace-text_search",
+    "filesystem-edit_search",
+    "ide-get_diagnostics"
+  ]
+}

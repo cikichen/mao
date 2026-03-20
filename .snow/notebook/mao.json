@@ -1,0 +1,20 @@
+{
+  ".claude/skills/frontend-design/SKILL.md": [
+    {
+      "id": "notebook-1774003682920_ioii520f3",
+      "filePath": ".claude/skills/frontend-design/SKILL.md",
+      "note": "从 Anthropic skills 仓库安装了 frontend-design skill；本地副本包含 SKILL.md 和 LICENSE.txt，可在后续前端页面/视觉优化任务中直接参考。",
+      "createdAt": "2026-03-20T18:48:02.920",
+      "updatedAt": "2026-03-20T18:48:02.920"
+    }
+  ],
+  ".claude/skills/cache-components/SKILL.md": [
+    {
+      "id": "notebook-1774004153807_7zf0yo7kb",
+      "filePath": ".claude/skills/cache-components/SKILL.md",
+      "note": "从 vercel/next.js 的 .claude-plugin/cache-components 技能目录提取并安装了本地副本，包含 SKILL.md、REFERENCE.md、PATTERNS.md、TROUBLESHOOTING.md，用于 Next.js Cache Components / PPR 相关开发参考。",
+      "createdAt": "2026-03-20T18:55:53.807",
+      "updatedAt": "2026-03-20T18:55:53.807"
+    }
+  ]
+}

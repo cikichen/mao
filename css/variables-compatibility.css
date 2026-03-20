@@ -1,0 +1,44 @@
+:root {
+    /* Color Mapping */
+    --color-primary: var(--primary-color);
+    --color-primary-light: var(--primary-light);
+    --color-primary-dark: var(--primary-dark);
+    --color-secondary: var(--secondary-color);
+    --color-accent: var(--accent-color);
+
+    /* Background Mapping */
+    --bg-body: var(--bg-color);
+    --bg-surface: var(--surface-color);
+    --bg-surface-elevated: var(--surface-light);
+    --bg-surface-hover: #3d3d3d;
+    /* slightly lighter than surface */
+
+    /* Glass Effects */
+    --bg-glass: rgba(45, 45, 45, 0.8);
+    --bg-glass-strong: rgba(45, 45, 45, 0.95);
+    --backdrop-blur: 8px;
+    --backdrop-blur-strong: 12px;
+
+    /* Transparent Colors */
+    --color-primary-transparent: rgba(211, 47, 47, 0.2);
+    --color-secondary-transparent: rgba(255, 215, 0, 0.2);
+
+    /* Borders */
+    --border-color-hover: #666666;
+
+    /* Radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+    --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+    --shadow-glow: 0 0 15px rgba(211, 47, 47, 0.5);
+    --color-primary-glow: rgba(211, 47, 47, 0.6);
+    --color-primary-hover: var(--primary-light);
+}

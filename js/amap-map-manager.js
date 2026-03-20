@@ -1,4 +1,4 @@
-class AMapManager {
+export default class AMapManager {
     constructor() {
         this.map = null;
         this.markers = new Map();
@@ -11,10 +11,18 @@ class AMapManager {
         this.eventListeners = new Map();
     }
 
-    async initMap(containerId) {
+    async initMap(containerOrId) {
         if (typeof AMap === 'undefined') throw new Error('高德地图API未加载');
+
+        // Resolve container
+        let container = containerOrId;
+        if (typeof containerOrId === 'string') {
+            container = document.getElementById(containerOrId);
+            if (!container) throw new Error(`Map container '${containerOrId}' not found`);
+        }
+
         // 使用韶山（出生点）作为初始中心点
-        this.map = new AMap.Map(containerId, {
+        this.map = new AMap.Map(container, {
             center: [112.527621, 27.915456], // 韶山坐标
             zoom: 8, // 使用较高的缩放级别显示更多细节
             mapStyle: 'amap://styles/normal',
@@ -45,6 +53,7 @@ class AMapManager {
     }
 
     addEventMarkers(events) {
+        this.clearMarkers();
         events.forEach(event => {
             if (!event.coordinates || isNaN(event.coordinates.lng) || isNaN(event.coordinates.lat)) return;
             const marker = new AMap.Marker({
@@ -57,6 +66,16 @@ class AMapManager {
             this.markers.set(event.id, marker);
         });
         this.map.setFitView();
+    }
+
+    clearMarkers() {
+        if (!this.markers.size) return;
+        this.markers.forEach(marker => {
+            if (marker && typeof marker.setMap === 'function') {
+                marker.setMap(null);
+            }
+        });
+        this.markers.clear();
     }
 
     centerToEvent(event) {
