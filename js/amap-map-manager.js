@@ -9,6 +9,7 @@ export default class AMapManager {
         this.staticTrajectory = null;   // For the full path when not animating
         this.isInitialized = false;
         this.eventListeners = new Map();
+        this.selectedMarkerId = null;
     }
 
     async initMap(containerOrId) {
@@ -25,7 +26,7 @@ export default class AMapManager {
         this.map = new AMap.Map(container, {
             center: [112.527621, 27.915456], // 韶山坐标
             zoom: 8, // 使用较高的缩放级别显示更多细节
-            mapStyle: 'amap://styles/normal',
+            mapStyle: 'amap://styles/dark',
         });
         this.map.on('complete', () => {
             this.isInitialized = true;
@@ -34,7 +35,7 @@ export default class AMapManager {
             // Initialize animated and static trajectories
             this.animatedTrajectory = new AMap.Polyline({
                 path: [],
-                strokeColor: '#007bff', // Blue for animated path
+                strokeColor: '#ff4444', // Red for animated path
                 strokeWeight: 4,
                 strokeOpacity: 0.8,
                 map: this.map,
@@ -42,9 +43,9 @@ export default class AMapManager {
             });
             this.staticTrajectory = new AMap.Polyline({
                 path: [],
-                strokeColor: '#d32f2f', // Red for static path
+                strokeColor: '#d32f2f', // Theme red for static path
                 strokeWeight: 4,
-                strokeOpacity: 0.6,
+                strokeOpacity: 0.5,
                 map: this.map,
                 zIndex: 80 // Lower zIndex for static path
             });
@@ -52,45 +53,105 @@ export default class AMapManager {
         return new Promise(resolve => this.map.on('complete', resolve));
     }
 
+    _createMarkerContent(type, isSelected = false) {
+        const colors = {
+            historical: '#d32f2f',
+            article: '#ffd700',
+            poem: '#ff8a65'
+        };
+        const color = colors[type] || colors.historical;
+        const size = isSelected ? 18 : 12;
+        const border = isSelected ? 3 : 2;
+        const shadow = isSelected
+            ? `0 0 12px ${color}, 0 0 24px ${color}40`
+            : `0 0 6px ${color}80`;
+
+        return `<div style="
+            width: ${size}px; height: ${size}px;
+            background: ${color};
+            border-radius: 50%;
+            border: ${border}px solid #fff;
+            box-shadow: ${shadow};
+            transition: all 0.25s ease;
+            cursor: pointer;
+        "></div>`;
+    }
+
+    _getMarkerOffset(isSelected = false) {
+        const size = isSelected ? 18 : 12;
+        return new AMap.Pixel(-size / 2, -size / 2);
+    }
+
     addEventMarkers(events) {
         this.clearMarkers();
         events.forEach(event => {
             if (!event.coordinates || isNaN(event.coordinates.lng) || isNaN(event.coordinates.lat)) return;
+            
+            const isSelected = event.id === this.selectedMarkerId;
             const marker = new AMap.Marker({
                 position: [event.coordinates.lng, event.coordinates.lat],
                 title: event.title,
+                content: this._createMarkerContent(event.type, isSelected),
+                offset: this._getMarkerOffset(isSelected),
                 extData: event
             });
-            marker.on('click', () => this.emit('markerClick', event));
+            
+            marker.on('click', () => {
+                this.highlightMarker(event.id);
+                this.emit('markerClick', event);
+            });
+            
             this.map.add(marker);
-            this.markers.set(event.id, marker);
+            this.markers.set(event.id, { marker, event });
         });
-        this.map.setFitView();
+        
+        // 自动适配视野
+        if (this.markers.size > 1) {
+            this.map.setFitView();
+        }
     }
 
     clearMarkers() {
         if (!this.markers.size) return;
-        this.markers.forEach(marker => {
+        this.markers.forEach(({ marker }) => {
             if (marker && typeof marker.setMap === 'function') {
                 marker.setMap(null);
             }
         });
         this.markers.clear();
+        this.selectedMarkerId = null;
+    }
+
+    highlightMarker(eventId) {
+        // 恢复上一个选中的 marker
+        if (this.selectedMarkerId && this.markers.has(this.selectedMarkerId)) {
+            const prev = this.markers.get(this.selectedMarkerId);
+            if (prev && prev.marker) {
+                prev.marker.setContent(this._createMarkerContent(prev.event.type, false));
+                prev.marker.setOffset(this._getMarkerOffset(false));
+            }
+        }
+
+        // 高亮新选中的 marker
+        if (this.markers.has(eventId)) {
+            const curr = this.markers.get(eventId);
+            if (curr && curr.marker) {
+                curr.marker.setContent(this._createMarkerContent(curr.event.type, true));
+                curr.marker.setOffset(this._getMarkerOffset(true));
+                this.selectedMarkerId = eventId;
+            }
+        }
     }
 
     centerToEvent(event) {
         if (!event.coordinates || isNaN(event.coordinates.lng) || isNaN(event.coordinates.lat)) return;
-        const marker = this.markers.get(event.id);
-        if (!marker) return;
+        const item = this.markers.get(event.id);
+        if (!item || !item.marker) return;
 
-        this.map.panTo(marker.getPosition());
+        this.map.panTo(item.marker.getPosition());
         this.map.setZoom(12);
 
-        if (this.currentMarker) {
-            this.currentMarker.setAnimation('AMAP_ANIMATION_NONE');
-        }
-        marker.setAnimation('AMAP_ANIMATION_BOUNCE');
-        this.currentMarker = marker;
+        this.highlightMarker(event.id);
     }
 
     drawStaticTrajectory(eventsArray) {
@@ -363,5 +424,17 @@ export default class AMapManager {
             this.movingFootprintMarker.setMap(null); // 移除移动标记
             this.movingFootprintMarker = null;
         }
+    }
+
+    destroy() {
+        this.clearAnimatedTrajectory();
+        this.clearMarkers();
+        if (this.map) {
+            if (typeof this.map.destroy === 'function') {
+                this.map.destroy();
+            }
+            this.map = null;
+        }
+        this.isInitialized = false;
     }
 }

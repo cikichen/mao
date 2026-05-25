@@ -1,271 +1,185 @@
 <template>
-    <header class="header app-header">
-        <div class="header-content app-header__content">
-            <div class="app-header__brand">
-                <div class="logo app-header__logo">
-                    <i class="fas fa-map-marked-alt"></i>
-                    <div class="app-header__title-group">
-                        <h1>毛主席生平足迹地图</h1>
-                        <p class="app-header__subtitle">
-                            以交互地图与时间线回望 1893—1976 的关键足迹
-                        </p>
-                    </div>
-                </div>
-
-                <div class="app-header__meta">
-                    <span class="app-header__badge">
-                        <i class="fas fa-route"></i>
-                        {{ totalEvents }} 个历史节点
-                    </span>
-                    <span class="app-header__badge app-header__badge--muted">
-                        <i class="fas fa-location-dot"></i>
-                        {{ currentLocation }}
-                    </span>
-                </div>
+    <header class="header-bar" role="banner">
+        <div class="header-bar__brand">
+            <div class="header-bar__emblem">
+                <i class="fas fa-map-marked-alt"></i>
             </div>
-
-            <nav class="nav-menu app-header__actions">
-                <button class="nav-btn app-header__action-btn" @click="openModal('search')">
-                    <i class="fas fa-search"></i>
-                    <span>搜索</span>
-                </button>
-                <button class="nav-btn app-header__action-btn" @click="openModal('filter')">
-                    <i class="fas fa-filter"></i>
-                    <span>筛选</span>
-                </button>
-                <button class="nav-btn app-header__action-btn" @click="openModal('info')">
-                    <i class="fas fa-info-circle"></i>
-                    <span>说明</span>
-                </button>
-                <div class="map-selector-container">
-                    <button class="nav-btn app-header__action-btn" @click="toggleMapDropdown">
-                        <i class="fas fa-map"></i>
-                        <span>{{ currentMapLabel }}</span>
-                        <i
-                            class="fas fa-chevron-down app-header__chevron"
-                            :class="{ 'is-open': isMapDropdownOpen }"
-                        ></i>
-                    </button>
-                    <div class="map-provider-dropdown" :class="{ active: isMapDropdownOpen }">
-                        <div
-                            class="map-provider-dropdown-item"
-                            :class="{ selected: mapProvider === 'leaflet' }"
-                            @click="selectMapProvider('leaflet')"
-                        >
-                            Leaflet (OpenStreetMap)
-                        </div>
-                        <div
-                            class="map-provider-dropdown-item"
-                            :class="{ selected: mapProvider === 'amap' }"
-                            @click="selectMapProvider('amap')"
-                        >
-                            高德地图
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            <div class="header-bar__text">
+                <h1>毛主席生平足迹地图</h1>
+                <p class="header-bar__sub">1893 — 1976</p>
+            </div>
         </div>
+
+        <div class="header-bar__stats">
+            <span class="header-bar__stat">
+                <i class="fas fa-route"></i>
+                <strong>{{ totalEvents }}</strong> 历史节点
+            </span>
+            <span class="header-bar__stat" v-if="currentLocation">
+                <i class="fas fa-location-dot"></i>
+                {{ currentLocation }}
+            </span>
+        </div>
+
+        <nav class="header-bar__actions" aria-label="工具栏">
+            <button class="header-btn" @click="uiStore.openModal('search')" title="搜索 (Ctrl+K)">
+                <i class="fas fa-search"></i>
+                <span class="header-btn__label">搜索</span>
+            </button>
+            <button class="header-btn" @click="uiStore.openModal('filter')" title="筛选 (Ctrl+F)">
+                <i class="fas fa-filter"></i>
+                <span class="header-btn__label">筛选</span>
+            </button>
+            <button class="header-btn" @click="uiStore.openModal('settings')" title="设置地图服务及 Key">
+                <i class="fas fa-cog"></i>
+                <span class="header-btn__label">地图设置</span>
+            </button>
+            <button class="header-btn" @click="uiStore.openModal('info')" title="说明">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </nav>
     </header>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { computed } from 'vue';
 import { useUIStore } from '../stores/ui';
 import { useEventsStore } from '../stores/events';
 
 const uiStore = useUIStore();
 const eventsStore = useEventsStore();
-const isMapDropdownOpen = ref(false);
 
-const mapProvider = computed(() => uiStore.mapProvider);
-const currentMapLabel = computed(() => (mapProvider.value === 'leaflet' ? 'Leaflet' : '高德地图'));
-const totalEvents = computed(
-    () => eventsStore.filteredEvents.length || eventsStore.events.length || 0
-);
-const currentLocation = computed(() => eventsStore.currentEvent?.location?.city || '中国');
-
-function openModal(name) {
-    uiStore.openModal(name);
-}
-
-function toggleMapDropdown() {
-    isMapDropdownOpen.value = !isMapDropdownOpen.value;
-}
-
-function selectMapProvider(provider) {
-    uiStore.setMapProvider(provider);
-    isMapDropdownOpen.value = false;
-}
-
-const handleClickOutside = e => {
-    if (!e.target.closest('.map-selector-container')) {
-        isMapDropdownOpen.value = false;
-    }
-};
-
-onMounted(() => {
-    window.addEventListener('click', handleClickOutside);
-});
-
-onUnmounted(() => {
-    window.removeEventListener('click', handleClickOutside);
-});
+const totalEvents = computed(() => eventsStore.filteredEvents.length || eventsStore.events.length || 0);
+const currentLocation = computed(() => eventsStore.currentEvent?.location?.city || '');
 </script>
 
 <style scoped>
-.app-header {
-    position: relative;
-    z-index: 1200;
-    backdrop-filter: blur(var(--backdrop-blur, 8px));
-    background: linear-gradient(135deg, rgba(20, 20, 20, 0.92), rgba(45, 45, 45, 0.88)),
-        var(--surface-color);
-    border-bottom-color: rgba(255, 255, 255, 0.08);
-}
-
-.app-header__content {
-    max-width: none;
-    padding: 14px 24px;
-    gap: 20px;
-}
-
-.app-header__brand {
+.header-bar {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    gap: 20px;
+    padding: 12px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
+    background: rgba(18, 18, 18, 0.75);
+    backdrop-filter: blur(16px) saturate(130%);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.header-bar__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
     min-width: 0;
 }
 
-.app-header__logo {
-    gap: 14px;
-}
-
-.app-header__logo i {
-    display: inline-flex;
+.header-bar__emblem {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, rgba(211, 47, 47, 0.18), rgba(255, 102, 89, 0.1));
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(211, 47, 47, 0.6), rgba(211, 47, 47, 0.2));
+    box-shadow: var(--shadow-glow-primary);
+    font-size: 16px;
 }
 
-.app-header__title-group {
-    min-width: 0;
-}
-
-.app-header__title-group h1 {
-    font-size: 24px;
+.header-bar__text h1 {
+    font-size: 20px;
     line-height: 1.2;
+    white-space: nowrap;
 }
 
-.app-header__subtitle {
-    margin-top: 4px;
+.header-bar__sub {
+    font-size: 12px;
     color: var(--text-muted);
-    font-size: 13px;
+    letter-spacing: 0.15em;
+    margin-top: 2px;
 }
 
-.app-header__meta {
+.header-bar__stats {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.app-header__badge {
-    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    min-height: 32px;
-    padding: 0 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    font-size: 12px;
+    gap: 16px;
+    flex-shrink: 0;
 }
 
-.app-header__badge--muted {
+.header-bar__stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
     color: var(--text-secondary);
+    white-space: nowrap;
 }
 
-.app-header__actions {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.app-header__action-btn {
-    min-height: 42px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(8px);
-}
-
-.app-header__chevron {
+.header-bar__stat i {
+    color: var(--color-secondary);
     font-size: 12px;
-    transition: transform var(--transition-fast);
 }
 
-.app-header__chevron.is-open {
-    transform: rotate(180deg);
+.header-bar__stat strong {
+    color: var(--text-primary);
+    font-weight: 600;
 }
 
-@media (max-width: 1024px) {
-    .app-header__content {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .app-header__actions {
-        justify-content: flex-start;
-    }
+.header-bar__actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
 }
 
+.header-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 13px;
+    transition: all var(--transition-normal);
+}
+
+.header-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border-color: var(--border-color-hover);
+}
+
+.header-btn i {
+    font-size: 14px;
+}
+
+/* Mobile */
 @media (max-width: 768px) {
-    .app-header__content {
-        padding: 12px 16px;
-        gap: 14px;
+    .header-bar {
+        padding: 10px 14px;
+        gap: 12px;
+        border-radius: var(--radius-md);
     }
 
-    .app-header__title-group h1 {
-        font-size: 20px;
+    .header-bar__stats {
+        display: none;
     }
 
-    .app-header__subtitle {
-        font-size: 12px;
+    .header-bar__text h1 {
+        font-size: 16px;
     }
 
-    .app-header__actions {
-        gap: 8px;
+    .header-btn__label {
+        display: none;
     }
 
-    .app-header__action-btn {
-        min-width: 42px;
-        padding: 8px 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .app-header__logo {
-        align-items: flex-start;
-    }
-
-    .app-header__logo i {
-        width: 40px;
-        height: 40px;
-    }
-
-    .app-header__title-group h1 {
-        font-size: 18px;
-    }
-
-    .app-header__meta {
-        gap: 8px;
-    }
-
-    .app-header__badge {
-        width: 100%;
-        justify-content: center;
+    .header-btn {
+        padding: 8px 10px;
     }
 }
 </style>

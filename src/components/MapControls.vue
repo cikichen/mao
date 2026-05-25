@@ -1,15 +1,15 @@
 <template>
     <div class="map-controls">
-        <button class="control-btn" @click="$emit('reset')" title="复位地图">
+        <button class="mc-btn" @click="$emit('reset')" title="复位地图">
             <i class="fas fa-compress-arrows-alt"></i>
         </button>
-        <button class="control-btn" @click="$emit('zoomIn')" title="放大">
+        <button class="mc-btn" @click="$emit('zoomIn')" title="放大">
             <i class="fas fa-plus"></i>
         </button>
-        <button class="control-btn" @click="$emit('zoomOut')" title="缩小">
+        <button class="mc-btn" @click="$emit('zoomOut')" title="缩小">
             <i class="fas fa-minus"></i>
         </button>
-        <button class="control-btn" @click="$emit('toggleFullscreen')" title="全屏">
+        <button class="mc-btn" @click="$emit('toggleFullscreen')" title="全屏">
             <i class="fas fa-expand"></i>
         </button>
     </div>
@@ -22,62 +22,50 @@ defineEmits(['reset', 'zoomIn', 'zoomOut', 'toggleFullscreen']);
 <style scoped>
 .map-controls {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 16px;
+    right: 16px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    z-index: 400;
-    padding: 10px;
-    border-radius: 18px;
-    background: rgba(18, 18, 18, 0.64);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    gap: 6px;
+    z-index: var(--z-controls);
+    padding: 8px;
+    border-radius: var(--radius-lg);
+    background: rgba(18, 18, 18, 0.65);
+    border: 1px solid var(--border-color);
     backdrop-filter: blur(10px);
-    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+    box-shadow: var(--shadow-md);
 }
 
-.control-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
+.mc-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
     background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-color);
     color: var(--text-secondary);
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s ease;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+    font-size: 14px;
+    transition: all var(--transition-normal);
 }
 
-.control-btn:hover {
+.mc-btn:hover {
     background: rgba(211, 47, 47, 0.12);
     color: var(--color-primary);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 12px 24px rgba(211, 47, 47, 0.16);
-}
-
-.control-btn:active {
-    transform: translateY(0);
-}
-
-.control-btn i {
-    font-size: 16px;
+    border-color: rgba(211, 47, 47, 0.3);
 }
 
 @media (max-width: 768px) {
     .map-controls {
         top: auto;
-        bottom: 144px;
-        right: 14px;
-        padding: 8px;
-        gap: 8px;
+        bottom: 120px;
+        right: 10px;
     }
 
-    .control-btn {
-        width: 40px;
-        height: 40px;
+    .mc-btn {
+        width: 34px;
+        height: 34px;
     }
 }
 </style>

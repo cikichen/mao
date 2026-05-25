@@ -250,7 +250,6 @@ window.EVENTS_DATA = [
     "description": "毛泽东在长沙橘子洲头创作了著名诗词《沁园春·长沙》。",
     "content": "1925年秋，毛泽东重游橘子洲，面对湘江北去、层林尽染的壮丽景色，回忆起在长沙求学的峥嵘岁月，创作了《沁园春·长沙》。'问苍茫大地，谁主沉浮？'表达了他的雄心壮志。",
     "image": "images/events/1925-qinyuanchun.jpg"
-  }
   },
   {
     "id": "1927-03-nongmin-baogao",
@@ -517,7 +516,6 @@ window.EVENTS_DATA = [
     "description": "毛泽东在延安创作了气势磅礴的《沁园春·雪》。",
     "content": "1936年2月，毛泽东在延安创作了《沁园春·雪》。'北国风光，千里冰封，万里雪飘'，'江山如此多娇，引无数英雄竞折腰'，展现了伟大的气魄和胸怀。",
     "image": "images/events/1936-xue.jpg"
-  }
   },
   {
     "id": "1937-07-shijian-lun",

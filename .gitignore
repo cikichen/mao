@@ -47,3 +47,7 @@ Thumbs.db
 .ace-tool/
 .worktrees/
 worktrees/
+.agents/
+output/
+AGENTS.md
+

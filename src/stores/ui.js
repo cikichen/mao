@@ -1,25 +1,24 @@
 import { defineStore } from 'pinia';
 
-const MAP_PROVIDER_STORAGE_KEY = 'mao_map_provider';
+const MAP_PROVIDER_KEY = 'mao_map_provider';
 
-function getInitialMapProvider() {
+function getInitialProvider() {
     if (typeof window === 'undefined') return 'leaflet';
-    const stored = window.localStorage?.getItem(MAP_PROVIDER_STORAGE_KEY);
+    const stored = window.localStorage?.getItem(MAP_PROVIDER_KEY);
     if (stored === 'leaflet' || stored === 'amap') return stored;
-    const appDefault = window.APP_CONFIG?.defaultProvider;
-    if (appDefault === 'leaflet' || appDefault === 'amap') return appDefault;
     return 'leaflet';
 }
 
 export const useUIStore = defineStore('ui', {
     state: () => ({
-        activeModal: null, // 'search', 'filter', 'info' or null
+        activeModal: null,
         isSidebarOpen: true,
-        mapProvider: getInitialMapProvider() // 'leaflet' or 'amap'
+        mapProvider: getInitialProvider(),
+        isMobile: typeof window !== 'undefined' ? window.innerWidth < 768 : false
     }),
     actions: {
-        openModal(modalName) {
-            this.activeModal = modalName;
+        openModal(name) {
+            this.activeModal = name;
         },
         closeModal() {
             this.activeModal = null;
@@ -27,12 +26,13 @@ export const useUIStore = defineStore('ui', {
         toggleSidebar() {
             this.isSidebarOpen = !this.isSidebarOpen;
         },
+        setMobile(val) {
+            this.isMobile = val;
+        },
         setMapProvider(provider) {
             if (provider !== 'leaflet' && provider !== 'amap') return;
             this.mapProvider = provider;
-            if (typeof window !== 'undefined') {
-                window.localStorage?.setItem(MAP_PROVIDER_STORAGE_KEY, provider);
-            }
+            window.localStorage?.setItem(MAP_PROVIDER_KEY, provider);
         }
     }
 });

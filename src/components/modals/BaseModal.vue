@@ -1,108 +1,105 @@
 <template>
-  <div class="modal-backdrop" @click.self="close">
-    <div class="modal-content">
-      <header class="modal-header">
-        <h3>{{ title }}</h3>
-        <button class="close-btn" @click="close">
-          <i class="fas fa-times"></i>
-        </button>
-      </header>
-      <div class="modal-body">
-        <slot></slot>
-      </div>
-    </div>
-  </div>
+    <Teleport to="body">
+        <div class="modal-mask" @click.self="$emit('close')">
+            <div class="modal-box" :class="size">
+                <header class="modal-box__header">
+                    <h3>{{ title }}</h3>
+                    <button class="modal-box__close" @click="$emit('close')" aria-label="关闭">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </header>
+                <div class="modal-box__body">
+                    <slot />
+                </div>
+            </div>
+        </div>
+    </Teleport>
 </template>
 
 <script setup>
-const props = defineProps({
-  title: {
-    type: String,
-    default: ''
-  }
+defineProps({
+    title: { type: String, default: '' },
+    size: { type: String, default: '' }
 });
-
-const emit = defineEmits(['close']);
-
-function close() {
-  emit('close');
-}
+defineEmits(['close']);
 </script>
 
 <style scoped>
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  animation: fadeIn 0.3s ease;
+.modal-mask {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-modal);
+    animation: fadeIn 0.2s ease;
 }
 
-.modal-content {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-xl);
-  width: 90%;
-  max-width: 500px;
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-2xl);
-  animation: slideUp 0.3s ease;
+.modal-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    width: 90%;
+    max-width: 520px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    animation: fadeInUp 0.25s ease;
 }
 
-.modal-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--bg-surface-elevated);
-  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+.modal-box.large {
+    max-width: 680px;
 }
 
-.modal-header h3 {
-  margin: 0;
-  font-size: 18px;
-  color: var(--text-primary);
-  font-weight: 600;
-  letter-spacing: 0.5px;
+.modal-box__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
-.close-btn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 18px;
-  padding: 4px;
-  transition: color var(--transition-fast);
+.modal-box__header h3 {
+    font-size: 17px;
 }
 
-.close-btn:hover {
-  color: var(--text-primary);
+.modal-box__close {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
 }
 
-.modal-body {
-  padding: 24px;
-  overflow-y: auto;
-  color: var(--text-secondary);
+.modal-box__close:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.08);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.modal-box__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
 }
 
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@media (max-width: 768px) {
+    .modal-mask {
+        align-items: flex-end;
+    }
+
+    .modal-box {
+        width: 100%;
+        max-width: 100%;
+        max-height: 85vh;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        animation: slideInUp 0.3s ease;
+    }
 }
 </style>

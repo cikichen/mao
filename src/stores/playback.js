@@ -21,26 +21,41 @@ export const usePlaybackStore = defineStore('playback', {
             }
         },
         setCurrentIndex(index) {
-            const nextIndex = Number(index);
-            const maxIndex = Math.max(this.totalEvents - 1, 0);
-            this.currentIndex = Number.isFinite(nextIndex)
-                ? Math.min(Math.max(nextIndex, 0), maxIndex)
-                : 0;
+            const next = Number(index);
+            const max = Math.max(this.totalEvents - 1, 0);
+            this.currentIndex = Number.isFinite(next) ? Math.min(Math.max(next, 0), max) : 0;
+        },
+        nextIndex() {
+            const max = Math.max(this.totalEvents - 1, 0);
+            if (this.currentIndex < max) {
+                this.currentIndex++;
+                return true;
+            }
+            return false;
+        },
+        prevIndex() {
+            if (this.currentIndex > 0) {
+                this.currentIndex--;
+                return true;
+            }
+            return false;
         },
         setPlaying(flag) {
             this.isPlaying = !!flag;
         },
         togglePlay() {
-            if (this.totalEvents <= 1) {
-                this.isPlaying = false;
-                return;
-            }
+            if (this.totalEvents <= 1) { this.isPlaying = false; return; }
             this.isPlaying = !this.isPlaying;
         },
         setPlaySpeed(speed) {
-            const numericSpeed = Number(speed);
-            const normalizedSpeed = Number.isFinite(numericSpeed) ? numericSpeed : 1;
-            this.playSpeed = Math.min(Math.max(normalizedSpeed, 0.5), 2);
+            const steps = [0.5, 1, 1.5, 2];
+            const n = Number(speed);
+            this.playSpeed = steps.includes(n) ? n : 1;
+        },
+        cycleSpeed() {
+            const steps = [0.5, 1, 1.5, 2];
+            const idx = steps.indexOf(this.playSpeed);
+            this.playSpeed = steps[(idx + 1) % steps.length];
         }
     }
 });

@@ -1,8 +1,3 @@
-/**
- * 历史事件数据
- * 避免CORS问题，将JSON数据内嵌到JavaScript文件中
- */
-
 export const eventsData = [
   {
     "id": "1893-12-26-birth",
@@ -17,13 +12,27 @@ export const eventsData = [
       "city": "湘潭市",
       "district": "韶山市",
       "detail": "韶山冲上屋场",
-      "coordinates": [112.527621, 27.915456]
+      "coordinates": [
+        112.527621,
+        27.915456
+      ]
     },
-    "description": "毛泽东出生于湖南省湘潭县韶山冲上屋场，字润之，乳名石三伢子。父亲毛顺生，母亲文七妹。",
+    "description": "毛泽东出生于湖南省湘潭县韶山冲的一个农民家庭。",
     "significance": "中国共产党、中华人民共和国、中国人民解放军的主要缔造者和领导人诞生。",
-    "tags": ["出生", "韶山", "湖南"],
-    "sources": ["《毛泽东年谱》", "《毛泽东传》"],
-    "images": ["images/events/1893-birth.jpg"]
+    "tags": [
+      "出生",
+      "韶山",
+      "湖南"
+    ],
+    "sources": [
+      "《毛泽东年谱》",
+      "《毛泽东传》"
+    ],
+    "images": [
+      "images/events/1893-birth.jpg"
+    ],
+    "content": "毛泽东，字润之，湖南湘潭人。1893年12月26日（清光绪十九年十一月十九日）出生于湖南省湘潭县韶山冲的一个农民家庭。父亲毛贻昌，母亲文七妹。",
+    "image": "images/events/1893-birth.jpg"
   },
   {
     "id": "1910-09-01-dongshan",
@@ -32,19 +41,32 @@ export const eventsData = [
     "age": 16,
     "type": "historical",
     "importance": "medium",
-    "title": "进入东山高等小学堂",
+    "title": "东山学堂求学",
     "location": {
       "province": "湖南省",
       "city": "湘潭市",
       "district": "湘乡市",
-      "detail": "东山高等小学堂",
-      "coordinates": [112.535321, 27.734567]
+      "detail": "东山学堂",
+      "coordinates": [
+        112.535321,
+        27.734567
+      ]
     },
-    "description": "毛泽东离开韶山，进入湘乡东山高等小学堂读书，开始接受新式教育。",
+    "description": "毛泽东离开韶山，到湘乡东山学堂读书，开始接受新式教育。",
     "significance": "这是毛泽东第一次离开家乡，接受现代教育的开始，为其后来的思想形成奠定了基础。",
-    "tags": ["教育", "湘乡", "求学"],
-    "sources": ["《毛泽东年谱》"],
-    "images": ["images/events/1910-dongshan.jpg"]
+    "tags": [
+      "教育",
+      "湘乡",
+      "求学"
+    ],
+    "sources": [
+      "《毛泽东年谱》"
+    ],
+    "images": [
+      "images/events/1910-dongshan.jpg"
+    ],
+    "content": "1910年秋，毛泽东考入湘乡县东山高等小学堂。在这里，他第一次看到了世界地图，了解到世界之大，中国只是其中一部分。这段求学经历开阔了他的眼界。",
+    "image": "images/events/1910-dongshan.jpg"
   },
   {
     "id": "1911-10-10-xinhai",
@@ -53,34 +75,78 @@ export const eventsData = [
     "age": 17,
     "type": "historical",
     "importance": "high",
-    "title": "参加辛亥革命",
+    "title": "长沙参加辛亥革命",
     "location": {
       "province": "湖南省",
       "city": "长沙市",
       "district": "天心区",
       "detail": "长沙城",
-      "coordinates": [112.982279, 28.19409]
+      "coordinates": [
+        112.982279,
+        28.19409
+      ]
     },
     "description": "辛亥革命爆发，毛泽东在长沙参加革命军，开始了他的革命生涯。",
     "significance": "毛泽东第一次直接参与政治革命活动，树立了推翻封建专制的理想。",
-    "tags": ["辛亥革命", "长沙", "革命"],
-    "sources": ["《毛泽东年谱》"],
-    "images": ["images/events/1911-xinhai.jpg"]
+    "tags": [
+      "辛亥革命",
+      "长沙",
+      "革命"
+    ],
+    "sources": [
+      "《毛泽东年谱》"
+    ],
+    "images": [
+      "images/events/1911-xinhai.jpg",
+      "images/events/1911-revolution.jpg"
+    ],
+    "content": "1911年10月，辛亥革命爆发。毛泽东在长沙参加了革命军，虽然只当了半年兵，但这是他第一次直接参与政治活动，对他的思想产生了重要影响。",
+    "image": "images/events/1911-revolution.jpg"
+  },
+  {
+    "id": "1913-1918-normal-school",
+    "date": "1913-04-01",
+    "year": 1913,
+    "age": 19,
+    "type": "historical",
+    "importance": "high",
+    "title": "湖南第一师范学校",
+    "location": {
+      "province": "湖南省",
+      "city": "长沙市",
+      "district": "岳麓区",
+      "detail": "湖南第一师范学校",
+      "coordinates": [
+        112.938814,
+        28.183842
+      ]
+    },
+    "description": "毛泽东考入湖南第一师范学校，在这里度过了5年重要的求学时光。",
+    "content": "1913年春，毛泽东考入湖南省立第一师范学校。在这里，他遇到了对他影响深远的老师杨昌济，结识了蔡和森、萧子升等同学，开始系统地接受马克思主义思想。",
+    "image": "images/events/1913-normal-school.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1913-normal-school.jpg"
+    ]
   },
   {
     "id": "1918-04-14-xinmin",
-    "date": "1918-04-14",
+    "date": "1918-04-01",
     "year": 1918,
     "age": 24,
     "type": "article",
-    "importance": "high",
+    "importance": "medium",
     "title": "发表《体育之研究》",
     "location": {
       "province": "湖南省",
       "city": "长沙市",
       "district": "岳麓区",
       "detail": "湖南第一师范学校",
-      "coordinates": [112.938814, 28.183842]
+      "coordinates": [
+        112.938814,
+        28.183842
+      ]
     },
     "description": "毛泽东在《新青年》杂志上发表《体育之研究》一文，署名'二十八画生'。",
     "content": {
@@ -88,12 +154,106 @@ export const eventsData = [
       "author": "二十八画生（毛泽东）",
       "publication": "《新青年》第3卷第2号",
       "excerpt": "国力苶弱，武风不振，民族之体质，日趋轻细。此甚可忧之现象也。提倡体育，非独强吾人之身体，实欲强吾人之精神。体育一道，配德育与智育，而德智皆寄于体。无体是无德智也。",
-      "significance": "这是毛泽东公开发表的第一篇文章，体现了他对强身健体、振兴民族的思考。"
+      "significance": "这是毛泽东公开发表的第一篇文章，体现了他对强身健体、振兴民族的思考。",
+      "text": "1918年4月，毛泽东在《新青年》第3卷第2号上发表《体育之研究》，署名'二十八画生'。这是他公开发表的第一篇文章，提出了'文明其精神，野蛮其体魄'的著名观点。"
     },
     "significance": "毛泽东第一次在全国性刊物上发表文章，展现了他的文才和对民族体质的关注。",
-    "tags": ["文章", "体育", "新青年", "湖南一师"],
-    "sources": ["《新青年》杂志", "《毛泽东年谱》"],
-    "images": ["images/events/1918-xinmin.jpg"]
+    "tags": [
+      "文章",
+      "体育",
+      "新青年",
+      "湖南一师"
+    ],
+    "sources": [
+      "《新青年》杂志",
+      "《毛泽东年谱》"
+    ],
+    "images": [
+      "images/events/1918-xinmin.jpg",
+      "images/events/1918-tiyu.jpg"
+    ],
+    "image": "images/events/1918-tiyu.jpg"
+  },
+  {
+    "id": "1918-09-beijing-daxue",
+    "date": "1918-09-01",
+    "year": 1918,
+    "age": 24,
+    "type": "historical",
+    "importance": "high",
+    "title": "北京大学图书馆工作",
+    "location": {
+      "province": "北京市",
+      "city": "北京市",
+      "district": "海淀区",
+      "detail": "北京大学图书馆",
+      "coordinates": [
+        116.310316,
+        39.992806
+      ]
+    },
+    "description": "毛泽东在北京大学图书馆担任助理员，接触到李大钊、陈独秀等人，开始接受马克思主义思想。",
+    "content": "1918年9月，毛泽东来到北京，在北京大学图书馆担任助理员，月薪8元。在这里，他接触到李大钊、陈独秀等马克思主义传播者，开始系统地接受马克思主义思想启蒙。",
+    "image": "images/events/1918-beijing.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1918-beijing.jpg"
+    ]
+  },
+  {
+    "id": "1919-07-xiangjiang-pinglun",
+    "date": "1919-07-14",
+    "year": 1919,
+    "age": 25,
+    "type": "article",
+    "importance": "medium",
+    "title": "创办《湘江评论》",
+    "location": {
+      "province": "湖南省",
+      "city": "长沙市",
+      "district": "天心区",
+      "detail": "长沙城",
+      "coordinates": [
+        112.982279,
+        28.19409
+      ]
+    },
+    "description": "毛泽东在长沙创办《湘江评论》，宣传新思想新文化。",
+    "content": "1919年7月14日，毛泽东在长沙创办《湘江评论》周刊，任主编。该刊物宣传反帝反封建思想，传播马克思主义，在湖南产生了重要影响。",
+    "image": "images/events/1919-xiangjiang.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1919-xiangjiang.jpg"
+    ]
+  },
+  {
+    "id": "1920-11-changsha-gongchan-zuzhi",
+    "date": "1920-11-01",
+    "year": 1920,
+    "age": 26,
+    "type": "historical",
+    "importance": "high",
+    "title": "创建长沙共产主义小组",
+    "location": {
+      "province": "湖南省",
+      "city": "长沙市",
+      "district": "天心区",
+      "detail": "新民学会",
+      "coordinates": [
+        112.982279,
+        28.19409
+      ]
+    },
+    "description": "毛泽东在长沙创建共产主义小组，成为中国共产党的早期组织之一。",
+    "content": "1920年11月，毛泽东在长沙创建共产主义小组，这是中国共产党的早期组织之一。小组成员包括何叔衡、彭璜等人，为中国共产党的成立奠定了基础。",
+    "image": "images/events/1920-changsha.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1920-changsha.jpg"
+    ]
   },
   {
     "id": "1921-07-23-ccp-first",
@@ -108,17 +268,111 @@ export const eventsData = [
       "city": "上海市",
       "district": "黄浦区",
       "detail": "望志路106号（今兴业路76号）",
-      "coordinates": [121.466797, 31.220487]
+      "coordinates": [
+        121.466797,
+        31.220487
+      ]
     },
     "description": "毛泽东作为湖南代表出席中国共产党第一次全国代表大会，中国共产党正式成立。",
     "significance": "中国共产党成立，毛泽东成为党的创始人之一，开启了中国革命的新篇章。",
-    "tags": ["中共一大", "上海", "建党", "代表"],
-    "sources": ["《中国共产党历史》", "《毛泽东年谱》"],
-    "images": ["images/events/1921-ccp-first.jpg"]
+    "tags": [
+      "中共一大",
+      "上海",
+      "建党",
+      "代表"
+    ],
+    "sources": [
+      "《中国共产党历史》",
+      "《毛泽东年谱》"
+    ],
+    "images": [
+      "images/events/1921-ccp-first.jpg"
+    ]
+  },
+  {
+    "id": "1921-07-shanghai-ccp",
+    "date": "1921-07-23",
+    "year": 1921,
+    "age": 27,
+    "type": "historical",
+    "importance": "high",
+    "title": "上海参加中共一大",
+    "location": {
+      "province": "上海市",
+      "city": "上海市",
+      "district": "黄浦区",
+      "detail": "望志路106号（今兴业路76号）",
+      "coordinates": [
+        121.466667,
+        31.216667
+      ]
+    },
+    "description": "毛泽东作为湖南代表参加中国共产党第一次全国代表大会。",
+    "content": "1921年7月23日，中国共产党第一次全国代表大会在上海法租界望志路106号开幕。毛泽东作为湖南代表出席会议，时年28岁，是13名代表中较年轻的一位。",
+    "image": "images/events/1921-ccp-first.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1921-ccp-first.jpg"
+    ]
+  },
+  {
+    "id": "1922-09-anyuan-bagong",
+    "date": "1922-09-14",
+    "year": 1922,
+    "age": 28,
+    "type": "historical",
+    "importance": "high",
+    "title": "安源路矿工人大罢工",
+    "location": {
+      "province": "江西省",
+      "city": "萍乡市",
+      "district": "安源区",
+      "detail": "安源路矿",
+      "coordinates": [
+        113.852222,
+        27.622222
+      ]
+    },
+    "description": "毛泽东指导安源路矿工人大罢工，这是中国共产党领导的第一次大规模工人运动。",
+    "content": "1922年9月14日，在毛泽东指导下，安源路矿工人举行大罢工，参加人数达1.7万人。这是中国共产党领导的第一次大规模工人运动，取得了完全胜利。",
+    "image": "images/events/1922-anyuan.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1922-anyuan.jpg"
+    ]
+  },
+  {
+    "id": "1925-changsha-return",
+    "date": "1925-02-01",
+    "year": 1925,
+    "age": 31,
+    "type": "historical",
+    "importance": "medium",
+    "title": "回到长沙开展农民运动",
+    "location": {
+      "province": "湖南省",
+      "city": "长沙市",
+      "district": "天心区",
+      "detail": "长沙城",
+      "coordinates": [
+        112.982279,
+        28.19409
+      ]
+    },
+    "description": "毛泽东回到湖南长沙，开展农民运动的调查和组织工作。",
+    "content": "1925年2月，毛泽东回到湖南长沙，开始深入农村进行社会调查，组织农民运动。这一时期的实践为他后来的农民运动理论奠定了基础。",
+    "image": "images/events/1925-changsha.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1925-changsha.jpg"
+    ]
   },
   {
     "id": "1925-12-01-poem-changsha",
-    "date": "1925-12-01",
+    "date": "1925-10-01",
     "year": 1925,
     "age": 32,
     "type": "poem",
@@ -129,20 +383,62 @@ export const eventsData = [
       "city": "长沙市",
       "district": "岳麓区",
       "detail": "橘子洲头",
-      "coordinates": [112.958814, 28.203842]
+      "coordinates": [
+        112.958814,
+        28.203842
+      ]
     },
     "description": "毛泽东在长沙橘子洲头创作了著名诗词《沁园春·长沙》。",
     "content": {
       "title": "沁园春·长沙",
       "subtitle": "1925年",
-      "text": "独立寒秋，湘江北去，橘子洲头。\n看万山红遍，层林尽染；\n漫江碧透，百舸争流。\n鹰击长空，鱼翔浅底，\n万类霜天竞自由。\n怅寥廓，问苍茫大地，\n谁主沉浮？\n\n携来百侣曾游，\n忆往昔峥嵘岁月稠。\n恰同学少年，风华正茂；\n书生意气，挥斥方遒。\n指点江山，激扬文字，\n粪土当年万户侯。\n曾记否，到中流击水，\n浪遏飞舟？",
+      "text": "1925年秋，毛泽东重游橘子洲，面对湘江北去、层林尽染的壮丽景色，回忆起在长沙求学的峥嵘岁月，创作了《沁园春·长沙》。'问苍茫大地，谁主沉浮？'表达了他的雄心壮志。",
       "background": "1925年，毛泽东离开故乡韶山，去广州主持农民运动讲习所，途经长沙，重游橘子洲，感慨万千，写下了这首词。",
       "artistic_value": "这首词气势磅礴，意境开阔，展现了青年毛泽东的远大抱负和革命豪情。"
     },
     "significance": "这是毛泽东最著名的诗词之一，体现了他的文学才华和革命理想。",
-    "tags": ["诗词", "沁园春", "长沙", "橘子洲"],
-    "sources": ["《毛泽东诗词集》", "《毛泽东年谱》"],
-    "images": ["images/events/1925-changsha.jpg"]
+    "tags": [
+      "诗词",
+      "沁园春",
+      "长沙",
+      "橘子洲"
+    ],
+    "sources": [
+      "《毛泽东诗词集》",
+      "《毛泽东年谱》"
+    ],
+    "images": [
+      "images/events/1925-changsha.jpg",
+      "images/events/1925-qinyuanchun.jpg"
+    ],
+    "image": "images/events/1925-qinyuanchun.jpg"
+  },
+  {
+    "id": "1926-03-zhongguo-shehui-jieji-fenxi",
+    "date": "1926-03-01",
+    "year": 1926,
+    "age": 32,
+    "type": "article",
+    "importance": "high",
+    "title": "《中国社会各阶级的分析》",
+    "location": {
+      "province": "广东省",
+      "city": "广州市",
+      "district": "越秀区",
+      "detail": "广州城",
+      "coordinates": [
+        113.264385,
+        23.129163
+      ]
+    },
+    "description": "毛泽东发表《中国社会各阶级的分析》，系统分析了中国社会各阶级的政治态度。",
+    "content": "1926年3月，毛泽东在《中国农民》第2期上发表《中国社会各阶级的分析》。文章开头就提出了著名论断：'谁是我们的敌人？谁是我们的朋友？这个问题是革命的首要问题。'",
+    "image": "images/events/1926-jieji-fenxi.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1926-jieji-fenxi.jpg"
+    ]
   },
   {
     "id": "1927-03-01-hunan-peasant",
@@ -157,19 +453,62 @@ export const eventsData = [
       "city": "长沙市",
       "district": "天心区",
       "detail": "湖南省城",
-      "coordinates": [112.982279, 28.19409]
+      "coordinates": [
+        112.982279,
+        28.19409
+      ]
     },
     "description": "毛泽东发表《湖南农民运动考察报告》，为农民运动进行了有力辩护。",
     "content": {
       "title": "湖南农民运动考察报告",
       "date": "1927年3月",
       "excerpt": "很短的时间内，将有几万万农民从中国中部、南部和北部各省起来，其势如暴风骤雨，迅猛异常，无论什么大的力量都将压抑不住。他们将冲决一切束缚他们的罗网，朝着解放的路上迅跑。一切帝国主义、军阀、贪官污吏、土豪劣绅，都将被他们葬入坟墓。",
-      "significance": "这篇报告科学分析了农民运动的意义，为中国革命指明了依靠农民的正确道路。"
+      "significance": "这篇报告科学分析了农民运动的意义，为中国革命指明了依靠农民的正确道路。",
+      "text": "1927年3月，毛泽东发表《湖南农民运动考察报告》，深刻分析了农民运动的伟大意义，提出了'一切权力归农会'的口号，为中国革命指明了依靠农民的正确道路。"
     },
     "significance": "这是毛泽东关于农民问题的重要著作，奠定了中国革命走农村包围城市道路的理论基础。",
-    "tags": ["文章", "农民运动", "湖南", "考察报告"],
-    "sources": ["《毛泽东选集》", "《毛泽东年谱》"],
-    "images": ["images/events/1927-peasant-report.jpg"]
+    "tags": [
+      "文章",
+      "农民运动",
+      "湖南",
+      "考察报告"
+    ],
+    "sources": [
+      "《毛泽东选集》",
+      "《毛泽东年谱》"
+    ],
+    "images": [
+      "images/events/1927-peasant-report.jpg",
+      "images/events/1927-nongmin.jpg"
+    ],
+    "image": "images/events/1927-nongmin.jpg"
+  },
+  {
+    "id": "1927-08-baqihui",
+    "date": "1927-08-07",
+    "year": 1927,
+    "age": 33,
+    "type": "historical",
+    "importance": "high",
+    "title": "八七会议",
+    "location": {
+      "province": "湖北省",
+      "city": "武汉市",
+      "district": "汉口区",
+      "detail": "汉口鄱阳街139号",
+      "coordinates": [
+        114.285557,
+        30.584355
+      ]
+    },
+    "description": "毛泽东在八七会议上提出'政权是由枪杆子中取得的'著名论断。",
+    "content": "1927年8月7日，中共中央在汉口召开紧急会议（八七会议）。毛泽东在会上提出了'政权是由枪杆子中取得的'著名论断，为中国共产党走武装斗争道路指明了方向。",
+    "image": "images/events/1927-baqihui.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1927-baqihui.jpg"
+    ]
   },
   {
     "id": "1927-09-09-autumn-harvest",
@@ -181,37 +520,67 @@ export const eventsData = [
     "title": "领导秋收起义",
     "location": {
       "province": "湖南省",
-      "city": "长沙市",
-      "district": "浏阳市",
+      "city": "浏阳市",
+      "district": "文家市镇",
       "detail": "文家市",
-      "coordinates": [113.633333, 28.35]
+      "coordinates": [
+        113.633333,
+        28.35
+      ]
     },
     "description": "毛泽东领导湘赣边界秋收起义，第一次打出了工农革命军的旗号。",
     "significance": "这是中国共产党独立领导武装斗争的重要开端，为建立农村革命根据地奠定了基础。",
-    "tags": ["秋收起义", "工农革命军", "浏阳", "武装斗争"],
-    "sources": ["《中国共产党历史》", "《毛泽东年谱》"],
-    "images": ["images/events/1927-autumn-harvest.jpg"]
+    "tags": [
+      "秋收起义",
+      "工农革命军",
+      "浏阳",
+      "武装斗争"
+    ],
+    "sources": [
+      "《中国共产党历史》",
+      "《毛泽东年谱》"
+    ],
+    "images": [
+      "images/events/1927-autumn-harvest.jpg",
+      "images/events/1927-qiushou.jpg"
+    ],
+    "content": "1927年9月9日，毛泽东在湘赣边界领导秋收起义，第一次打出了'工农革命军第一军第一师'的旗号。起义虽然失败，但为建立人民军队积累了宝贵经验。",
+    "image": "images/events/1927-qiushou.jpg"
   },
   {
     "id": "1927-10-27-jinggangshan",
     "date": "1927-10-27",
     "year": 1927,
-    "age": 33,
+    "age": 34,
     "type": "historical",
     "importance": "high",
-    "title": "上井冈山",
+    "title": "上井冈山建立根据地",
     "location": {
       "province": "江西省",
       "city": "吉安市",
       "district": "井冈山市",
       "detail": "井冈山",
-      "coordinates": [114.289398, 26.748016]
+      "coordinates": [
+        114.289398,
+        26.748016
+      ]
     },
-    "description": "毛泽东率领秋收起义部队到达井冈山，开始创建井冈山革命根据地。",
+    "description": "毛泽东率领秋收起义部队上井冈山，建立了第一个农村革命根据地。",
     "significance": "井冈山革命根据地的建立，开辟了农村包围城市、武装夺取政权的革命道路。",
-    "tags": ["井冈山", "革命根据地", "农村包围城市"],
-    "sources": ["《毛泽东年谱》", "《井冈山革命史》"],
-    "images": ["images/events/1927-jinggangshan.jpg"]
+    "tags": [
+      "井冈山",
+      "革命根据地",
+      "农村包围城市"
+    ],
+    "sources": [
+      "《毛泽东年谱》",
+      "《井冈山革命史》"
+    ],
+    "images": [
+      "images/events/1927-jinggangshan.jpg"
+    ],
+    "content": "1927年10月，毛泽东率领秋收起义的部队到达井冈山，开始创建井冈山革命根据地。这是中国共产党建立的第一个农村革命根据地，开辟了'农村包围城市'的革命道路。",
+    "image": "images/events/1927-jinggangshan.jpg"
   },
   {
     "id": "1928-04-28-zhu-mao-meeting",
@@ -226,17 +595,113 @@ export const eventsData = [
       "city": "吉安市",
       "district": "井冈山市",
       "detail": "砻市",
-      "coordinates": [114.289398, 26.748016]
+      "coordinates": [
+        114.289398,
+        26.748016
+      ]
     },
-    "description": "毛泽东与朱德在井冈山砻市会师，成立中国工农红军第四军。",
+    "description": "朱德、陈毅率领南昌起义余部与毛泽东在井冈山会师。",
     "significance": "朱毛会师壮大了井冈山革命力量，形成了著名的'朱毛红军'。",
-    "tags": ["朱毛会师", "红四军", "井冈山", "朱德"],
-    "sources": ["《毛泽东年谱》", "《朱德传》"],
-    "images": ["images/events/1928-zhu-mao.jpg"]
+    "tags": [
+      "朱毛会师",
+      "红四军",
+      "井冈山",
+      "朱德"
+    ],
+    "sources": [
+      "《毛泽东年谱》",
+      "《朱德传》"
+    ],
+    "images": [
+      "images/events/1928-zhu-mao.jpg"
+    ],
+    "content": "1928年4月28日，朱德、陈毅率领南昌起义和湘南起义的部队与毛泽东领导的工农革命军在井冈山胜利会师，成立了中国工农红军第四军，朱德任军长，毛泽东任党代表。",
+    "image": "images/events/1928-zhu-mao.jpg"
   },
   {
-    "id": "1934-10-10-long-march-start",
-    "date": "1934-10-10",
+    "id": "1929-12-gutian-huiyi",
+    "date": "1929-12-28",
+    "year": 1929,
+    "age": 36,
+    "type": "historical",
+    "importance": "high",
+    "title": "古田会议",
+    "location": {
+      "province": "福建省",
+      "city": "龙岩市",
+      "district": "上杭县",
+      "detail": "古田镇",
+      "coordinates": [
+        116.429722,
+        25.002778
+      ]
+    },
+    "description": "毛泽东主持古田会议，确立了思想建党、政治建军的原则。",
+    "content": "1929年12月28日至29日，中国工农红军第四军第九次党代表大会在福建上杭古田召开。毛泽东主持会议并作报告，确立了思想建党、政治建军的根本原则。",
+    "image": "images/events/1929-gutian.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1929-gutian.jpg"
+    ]
+  },
+  {
+    "id": "1930-01-xingxing-zhihuo",
+    "date": "1930-01-05",
+    "year": 1930,
+    "age": 36,
+    "type": "article",
+    "importance": "high",
+    "title": "《星星之火，可以燎原》",
+    "location": {
+      "province": "江西省",
+      "city": "吉安市",
+      "district": "井冈山市",
+      "detail": "井冈山",
+      "coordinates": [
+        114.289398,
+        26.748016
+      ]
+    },
+    "description": "毛泽东写下《星星之火，可以燎原》，阐述了农村包围城市的革命道路。",
+    "content": "1930年1月5日，毛泽东在井冈山写下《星星之火，可以燎原》这篇重要文章，系统阐述了农村包围城市、武装夺取政权的革命道路理论。",
+    "image": "images/events/1930-xingxing.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1930-xingxing.jpg"
+    ]
+  },
+  {
+    "id": "1930-05-fandui-benben-zhuyi",
+    "date": "1930-05-01",
+    "year": 1930,
+    "age": 36,
+    "type": "article",
+    "importance": "high",
+    "title": "《反对本本主义》",
+    "location": {
+      "province": "江西省",
+      "city": "赣州市",
+      "district": "寻乌县",
+      "detail": "寻乌",
+      "coordinates": [
+        115.943889,
+        27.318056
+      ]
+    },
+    "description": "毛泽东写下《反对本本主义》，提出'没有调查，没有发言权'的著名论断。",
+    "content": "1930年5月，毛泽东在江西寻乌写下《反对本本主义》，提出了'没有调查，没有发言权'的著名论断，强调了实事求是的重要性。",
+    "image": "images/events/1930-benben.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1930-benben.jpg"
+    ]
+  },
+  {
+    "id": "1934-10-changzheng-start",
+    "date": "1934-10-16",
     "year": 1934,
     "age": 40,
     "type": "historical",
@@ -247,13 +712,19 @@ export const eventsData = [
       "city": "赣州市",
       "district": "于都县",
       "detail": "于都河",
-      "coordinates": [115.415953, 25.952775]
+      "coordinates": [
+        115.415258,
+        25.952775
+      ]
     },
-    "description": "中央红军开始长征，毛泽东随军从江西于都出发。",
-    "significance": "长征是中国革命史上的伟大壮举，是中国共产党和红军的生死存亡之战。",
-    "tags": ["长征", "于都", "中央红军"],
-    "sources": ["《毛泽东年谱》", "《长征史》"],
-    "images": ["images/events/1934-long-march.jpg"]
+    "description": "中央红军从江西于都出发，开始了举世闻名的二万五千里长征。",
+    "content": "1934年10月16日，由于第五次反'围剿'失败，中央红军主力8.6万人从江西于都等地出发，开始了举世闻名的二万五千里长征。毛泽东也在长征队伍中。",
+    "image": "images/events/1934-changzheng.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1934-changzheng.jpg"
+    ]
   },
   {
     "id": "1935-01-15-zunyi-conference",
@@ -268,19 +739,88 @@ export const eventsData = [
       "city": "遵义市",
       "district": "红花岗区",
       "detail": "遵义城",
-      "coordinates": [106.927389, 27.725654]
+      "coordinates": [
+        106.927389,
+        27.725654
+      ]
     },
-    "description": "中共中央在遵义召开政治局扩大会议，确立了毛泽东在党和红军中的领导地位。",
+    "description": "遵义会议确立了毛泽东在党和红军中的领导地位。",
     "significance": "遵义会议是中国共产党历史上一个生死攸关的转折点，挽救了党、挽救了红军、挽救了中国革命。",
-    "tags": ["遵义会议", "转折点", "领导地位", "长征"],
-    "sources": ["《中国共产党历史》", "《毛泽东年谱》"],
-    "images": ["images/events/1935-zunyi.jpg"]
+    "tags": [
+      "遵义会议",
+      "转折点",
+      "领导地位",
+      "长征"
+    ],
+    "sources": [
+      "《中国共产党历史》",
+      "《毛泽东年谱》"
+    ],
+    "images": [
+      "images/events/1935-zunyi.jpg"
+    ],
+    "content": "1935年1月15日至17日，中共中央在遵义召开政治局扩大会议。会议确立了毛泽东在党中央和红军的领导地位，在极端危急的历史关头挽救了党、挽救了红军、挽救了中国革命。",
+    "image": "images/events/1935-zunyi.jpg"
+  },
+  {
+    "id": "1935-02-siduchishui",
+    "date": "1935-02-01",
+    "year": 1935,
+    "age": 41,
+    "type": "historical",
+    "importance": "high",
+    "title": "四渡赤水",
+    "location": {
+      "province": "贵州省",
+      "city": "遵义市",
+      "district": "赤水市",
+      "detail": "赤水河",
+      "coordinates": [
+        105.698889,
+        28.589167
+      ]
+    },
+    "description": "毛泽东指挥红军四渡赤水，展现了高超的军事指挥艺术。",
+    "content": "1935年1月至3月，毛泽东指挥中央红军在贵州、四川、云南边境地区四次渡过赤水河，巧妙地摆脱了国民党军队的围追堵截，被誉为毛泽东军事指挥艺术的得意之笔。",
+    "image": "images/events/1935-siduchishui.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1935-siduchishui.jpg"
+    ]
+  },
+  {
+    "id": "1935-10-qilv-changzheng",
+    "date": "1935-10-01",
+    "year": 1935,
+    "age": 42,
+    "type": "poem",
+    "importance": "high",
+    "title": "《七律·长征》",
+    "location": {
+      "province": "陕西省",
+      "city": "延安市",
+      "district": "吴起县",
+      "detail": "长征途中",
+      "coordinates": [
+        108.175814,
+        36.927389
+      ]
+    },
+    "description": "毛泽东创作《七律·长征》，歌颂了红军长征的伟大壮举。",
+    "content": "1935年10月，长征即将胜利结束时，毛泽东创作了《七律·长征》：'红军不怕远征难，万水千山只等闲。五岭逶迤腾细浪，乌蒙磅礴走泥丸...'，生动地概括了红军长征的战斗历程。",
+    "image": "images/events/1935-qilv-changzheng.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1935-qilv-changzheng.jpg"
+    ]
   },
   {
     "id": "1935-10-19-long-march-end",
     "date": "1935-10-19",
     "year": 1935,
-    "age": 41,
+    "age": 42,
     "type": "historical",
     "importance": "high",
     "title": "长征胜利结束",
@@ -289,19 +829,77 @@ export const eventsData = [
       "city": "延安市",
       "district": "吴起县",
       "detail": "吴起镇",
-      "coordinates": [108.175956, 36.927267]
+      "coordinates": [
+        108.175556,
+        36.927778
+      ]
     },
     "description": "中央红军到达陕北吴起镇，长征胜利结束。",
-    "significance": "长征的胜利，保存了中国革命的火种，为抗日战争和解放战争的胜利奠定了基础。",
-    "tags": ["长征胜利", "吴起", "陕北"],
-    "sources": ["《毛泽东年谱》", "《长征史》"],
-    "images": ["images/events/1935-long-march-end.jpg"]
+    "significance": "长征的胜利结束，为中国革命保存了骨干力量，奠定了抗日战争和解放战争胜利的基础。",
+    "tags": [
+      "长征",
+      "陕北",
+      "吴起",
+      "胜利"
+    ],
+    "sources": [
+      "《毛泽东年谱》",
+      "《长征史》"
+    ],
+    "images": [
+      "images/events/1935-long-march.jpg",
+      "images/events/1935-changzheng-end.jpg"
+    ],
+    "content": "1935年10月19日，中央红军到达陕北吴起镇，与陕北红军胜利会师，长征胜利结束。红军长征历时一年，行程二万五千里，创造了人类历史上的伟大奇迹。",
+    "image": "images/events/1935-changzheng-end.jpg"
   },
   {
-    "id": "1936-12-12-xian-incident",
-    "date": "1936-12-12",
+    "id": "1936-02-01-poem-snow",
+    "date": "1936-02-01",
     "year": 1936,
     "age": 42,
+    "type": "poem",
+    "importance": "high",
+    "title": "《沁园春·雪》",
+    "location": {
+      "province": "陕西省",
+      "city": "延安市",
+      "district": "宝塔区",
+      "detail": "延安城",
+      "coordinates": [
+        109.329444,
+        36.863889
+      ]
+    },
+    "description": "毛泽东在延安创作了气势磅礴的《沁园春·雪》。",
+    "content": {
+      "title": "沁园春·雪",
+      "subtitle": "1936年2月",
+      "text": "1936年2月，毛泽东在延安创作了《沁园春·雪》。'北国风光，千里冰封，万里雪飘'，'江山如此多娇，引无数英雄竞折腰'，展现了伟大的气魄和胸怀。",
+      "background": "1936年2月，毛泽东率领红军东征，途经陕北高原，面对雪后的壮丽景色，写下了这首千古名篇。",
+      "artistic_value": "这首词展现了毛泽东宏大的历史视野和革命豪情，被誉为古今咏雪第一词。"
+    },
+    "significance": "这是毛泽东最著名的诗词之一，展现了他的雄才大略和历史眼光。",
+    "tags": [
+      "诗词",
+      "沁园春",
+      "雪",
+      "陕北"
+    ],
+    "sources": [
+      "《毛泽东诗词集》"
+    ],
+    "images": [
+      "images/events/1936-snow.jpg",
+      "images/events/1936-xue.jpg"
+    ],
+    "image": "images/events/1936-xue.jpg"
+  },
+  {
+    "id": "1936-12-xian-shibian",
+    "date": "1936-12-12",
+    "year": 1936,
+    "age": 43,
     "type": "historical",
     "importance": "high",
     "title": "西安事变",
@@ -309,56 +907,336 @@ export const eventsData = [
       "province": "陕西省",
       "city": "西安市",
       "district": "莲湖区",
-      "detail": "西安",
-      "coordinates": [108.940175, 34.341568]
+      "detail": "西安城",
+      "coordinates": [
+        108.940175,
+        34.341568
+      ]
     },
-    "description": "张学良、杨虎城发动西安事变，毛泽东主张和平解决，促成第二次国共合作。",
-    "significance": "西安事变的和平解决，促成了抗日民族统一战线的形成，开启了全民族抗战的新局面。",
-    "tags": ["西安事变", "国共合作", "抗日统一战线"],
-    "sources": ["《毛泽东年谱》", "《西安事变史》"],
-    "images": ["images/events/1936-xian.jpg"]
+    "description": "西安事变爆发，毛泽东主张和平解决，促成第二次国共合作。",
+    "content": "1936年12月12日，张学良、杨虎城在西安发动兵谏，扣留蒋介石。毛泽东和中共中央主张和平解决西安事变，促成了第二次国共合作，为全民族抗战奠定了基础。",
+    "image": "images/events/1936-xian.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1936-xian.jpg"
+    ]
   },
   {
-    "id": "1937-07-07-lugouqiao",
+    "id": "1937-07-shijian-lun",
+    "date": "1937-07-01",
+    "year": 1937,
+    "age": 43,
+    "type": "article",
+    "importance": "high",
+    "title": "《实践论》",
+    "location": {
+      "province": "陕西省",
+      "city": "延安市",
+      "district": "宝塔区",
+      "detail": "延安城",
+      "coordinates": [
+        109.489727,
+        36.585455
+      ]
+    },
+    "description": "毛泽东在延安写下《实践论》，阐述了马克思主义认识论。",
+    "content": "1937年7月，毛泽东在延安写下《实践论》，副标题为《论认识和实践的关系——知和行的关系》，系统阐述了马克思主义认识论的基本观点。",
+    "image": "images/events/1937-shijian.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1937-shijian.jpg"
+    ]
+  },
+  {
+    "id": "1937-07-lugouqiao",
     "date": "1937-07-07",
     "year": 1937,
     "age": 43,
     "type": "historical",
     "importance": "high",
-    "title": "卢沟桥事变",
+    "title": "卢沟桥事变与全面抗战",
     "location": {
       "province": "北京市",
       "city": "北京市",
       "district": "丰台区",
       "detail": "卢沟桥",
-      "coordinates": [116.213889, 39.865]
+      "coordinates": [
+        116.213889,
+        39.863611
+      ]
     },
-    "description": "卢沟桥事变爆发，全面抗战开始，毛泽东发表《论持久战》等重要著作。",
-    "significance": "全面抗战的开始，毛泽东的持久战理论为抗战胜利指明了方向。",
-    "tags": ["卢沟桥事变", "全面抗战", "论持久战"],
-    "sources": ["《毛泽东年谱》", "《论持久战》"],
-    "images": ["images/events/1937-lugouqiao.jpg"]
+    "description": "卢沟桥事变爆发，中国全面抗战开始，毛泽东发表重要讲话。",
+    "content": "1937年7月7日，卢沟桥事变爆发，中国全面抗战开始。毛泽东发表《为日军进攻卢沟桥通电》，号召全国人民团结起来，坚决抗击日本侵略者。",
+    "image": "images/events/1937-lugouqiao.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1937-lugouqiao.jpg"
+    ]
   },
   {
-    "id": "1945-08-15-japan-surrender",
-    "date": "1945-08-15",
-    "year": 1945,
-    "age": 51,
-    "type": "historical",
+    "id": "1937-08-01-anti-japanese-theory",
+    "date": "1937-08-01",
+    "year": 1937,
+    "age": 43,
+    "type": "article",
     "importance": "high",
-    "title": "日本投降",
+    "title": "发表《论持久战》",
     "location": {
       "province": "陕西省",
       "city": "延安市",
       "district": "宝塔区",
       "detail": "延安",
-      "coordinates": [109.489727, 36.585455]
+      "coordinates": [
+        109.489727,
+        36.585455
+      ]
     },
-    "description": "日本宣布无条件投降，抗日战争胜利结束，毛泽东在延安发表重要讲话。",
-    "significance": "抗日战争的胜利，证明了毛泽东持久战理论的正确性，为解放战争的胜利奠定了基础。",
-    "tags": ["抗战胜利", "日本投降", "延安"],
-    "sources": ["《毛泽东年谱》"],
-    "images": ["images/events/1945-victory.jpg"]
+    "description": "毛泽东发表《论持久战》，科学分析了抗日战争的发展规律。",
+    "content": {
+      "title": "论持久战",
+      "date": "1938年5月",
+      "excerpt": "中国会亡吗？答复：不会亡，最后胜利是中国的。中国能够速胜吗？答复：不能速胜，抗日战争是持久战。这样的结论是正确的吗？我以为是正确的。",
+      "significance": "这篇著作科学预见了抗日战争的发展过程，为夺取抗战胜利提供了理论指导。"
+    },
+    "significance": "《论持久战》是毛泽东军事思想的重要组成部分，指导了中国的抗日战争。",
+    "tags": [
+      "文章",
+      "论持久战",
+      "抗日战争",
+      "延安"
+    ],
+    "sources": [
+      "《毛泽东选集》"
+    ],
+    "images": [
+      "images/events/1938-protracted-war.jpg"
+    ]
+  },
+  {
+    "id": "1937-08-maodun-lun",
+    "date": "1937-08-01",
+    "year": 1937,
+    "age": 43,
+    "type": "article",
+    "importance": "high",
+    "title": "《矛盾论》",
+    "location": {
+      "province": "陕西省",
+      "city": "延安市",
+      "district": "宝塔区",
+      "detail": "延安城",
+      "coordinates": [
+        109.489727,
+        36.585455
+      ]
+    },
+    "description": "毛泽东在延安写下《矛盾论》，阐述了马克思主义唯物辩证法。",
+    "content": "1937年8月，毛泽东在延安写下《矛盾论》，系统阐述了马克思主义唯物辩证法的核心——对立统一规律，成为毛泽东哲学思想的重要组成部分。",
+    "image": "images/events/1937-maodun.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1937-maodun.jpg"
+    ]
+  },
+  {
+    "id": "1938-05-lun-chijiu-zhan",
+    "date": "1938-05-26",
+    "year": 1938,
+    "age": 44,
+    "type": "article",
+    "importance": "high",
+    "title": "《论持久战》",
+    "location": {
+      "province": "陕西省",
+      "city": "延安市",
+      "district": "宝塔区",
+      "detail": "延安城",
+      "coordinates": [
+        109.489727,
+        36.585455
+      ]
+    },
+    "description": "毛泽东发表《论持久战》，科学预见了抗日战争的发展进程。",
+    "content": "1938年5月26日至6月3日，毛泽东在延安抗日军政大学发表《论持久战》的长篇讲演，科学地预见了抗日战争将经过战略防御、战略相持、战略反攻三个阶段。",
+    "image": "images/events/1938-chijiu.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1938-chijiu.jpg"
+    ]
+  },
+  {
+    "id": "1940-01-xinminzhu-zhuyi",
+    "date": "1940-01-01",
+    "year": 1940,
+    "age": 46,
+    "type": "article",
+    "importance": "high",
+    "title": "《新民主主义论》",
+    "location": {
+      "province": "陕西省",
+      "city": "延安市",
+      "district": "宝塔区",
+      "detail": "延安城",
+      "coordinates": [
+        109.489727,
+        36.585455
+      ]
+    },
+    "description": "毛泽东在延安发表《新民主主义论》，系统阐述了新民主主义革命理论。",
+    "content": "1940年1月，毛泽东在延安发表《新民主主义论》，系统地阐述了新民主主义的政治、经济、文化纲领，为中国革命指明了方向，成为指导中国革命的重要理论文献。",
+    "image": "images/events/1940-xinminzhu.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1940-xinminzhu.jpg"
+    ]
+  },
+  {
+    "id": "1942-05-yanan-wenyi-zuotanhui",
+    "date": "1942-05-23",
+    "year": 1942,
+    "age": 48,
+    "type": "article",
+    "importance": "high",
+    "title": "《在延安文艺座谈会上的讲话》",
+    "location": {
+      "province": "陕西省",
+      "city": "延安市",
+      "district": "宝塔区",
+      "detail": "延安城",
+      "coordinates": [
+        109.489727,
+        36.585455
+      ]
+    },
+    "description": "毛泽东发表《在延安文艺座谈会上的讲话》，阐述了文艺为人民服务的方针。",
+    "content": "1942年5月2日和23日，毛泽东在延安文艺座谈会上发表讲话，提出了文艺为工农兵服务、文艺为人民服务的根本方针，对中国文艺发展产生了深远影响。",
+    "image": "images/events/1942-wenyi.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1942-wenyi.jpg"
+    ]
+  },
+  {
+    "id": "1945-04-lun-lianhezhenfu",
+    "date": "1945-04-24",
+    "year": 1945,
+    "age": 51,
+    "type": "article",
+    "importance": "high",
+    "title": "《论联合政府》",
+    "location": {
+      "province": "陕西省",
+      "city": "延安市",
+      "district": "宝塔区",
+      "detail": "延安城",
+      "coordinates": [
+        109.489727,
+        36.585455
+      ]
+    },
+    "description": "毛泽东在中共七大上作《论联合政府》的政治报告。",
+    "content": "1945年4月24日，毛泽东在中国共产党第七次全国代表大会上作《论联合政府》的政治报告，全面总结了中国共产党领导中国革命的基本经验。",
+    "image": "images/events/1945-lianhezhenfu.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1945-lianhezhenfu.jpg"
+    ]
+  },
+  {
+    "id": "1945-08-kangzhan-shengli",
+    "date": "1945-08-15",
+    "year": 1945,
+    "age": 51,
+    "type": "historical",
+    "importance": "high",
+    "title": "抗日战争胜利",
+    "location": {
+      "province": "陕西省",
+      "city": "延安市",
+      "district": "宝塔区",
+      "detail": "延安城",
+      "coordinates": [
+        109.489727,
+        36.585455
+      ]
+    },
+    "description": "日本宣布无条件投降，中国抗日战争取得伟大胜利。",
+    "content": "1945年8月15日，日本天皇宣布无条件投降，中国抗日战争取得伟大胜利。毛泽东在延安发表《对日寇的最后一战》，号召全国人民彻底打败日本侵略者。",
+    "image": "images/events/1945-shengli.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1945-shengli.jpg"
+    ]
+  },
+  {
+    "id": "1945-08-28-chongqing-negotiations",
+    "date": "1945-08-28",
+    "year": 1945,
+    "age": 51,
+    "type": "historical",
+    "importance": "high",
+    "title": "重庆谈判",
+    "location": {
+      "province": "重庆市",
+      "city": "重庆市",
+      "district": "渝中区",
+      "detail": "重庆",
+      "coordinates": [
+        106.551556,
+        29.563009
+      ]
+    },
+    "description": "毛泽东应蒋介石邀请，飞赴重庆进行和平谈判。",
+    "significance": "重庆谈判体现了中国共产党争取和平的诚意，在政治上赢得了主动。",
+    "tags": [
+      "重庆谈判",
+      "和平",
+      "蒋介石",
+      "谈判"
+    ],
+    "sources": [
+      "《毛泽东年谱》",
+      "《重庆谈判史》"
+    ],
+    "images": [
+      "images/events/1945-chongqing.jpg"
+    ]
+  },
+  {
+    "id": "1945-08-chongqing-tanpan",
+    "date": "1945-08-28",
+    "year": 1945,
+    "age": 51,
+    "type": "historical",
+    "importance": "high",
+    "title": "重庆谈判",
+    "location": {
+      "province": "重庆市",
+      "city": "重庆市",
+      "district": "渝中区",
+      "detail": "重庆城",
+      "coordinates": [
+        106.551556,
+        29.563009
+      ]
+    },
+    "description": "毛泽东赴重庆与蒋介石进行和平谈判。",
+    "content": "1945年8月28日，毛泽东在周恩来、王若飞陪同下，从延安飞抵重庆，与国民党进行和平谈判。经过43天的谈判，双方签署了《政府与中共代表会谈纪要》（双十协定）。",
+    "image": "images/events/1945-chongqing.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1945-chongqing.jpg"
+    ]
   },
   {
     "id": "1949-10-01-founding-prc",
@@ -373,13 +1251,284 @@ export const eventsData = [
       "city": "北京市",
       "district": "东城区",
       "detail": "天安门广场",
-      "coordinates": [116.397477, 39.903119]
+      "coordinates": [
+        116.397477,
+        39.903119
+      ]
     },
-    "description": "毛泽东在天安门城楼上宣告中华人民共和国成立，中国人民从此站起来了。",
+    "description": "毛泽东在天安门城楼上庄严宣告中华人民共和国成立。",
     "significance": "新中国的成立标志着中国人民推翻了帝国主义、封建主义、官僚资本主义的统治，实现了民族独立和人民解放。",
-    "tags": ["建国", "天安门", "开国大典", "人民共和国"],
-    "sources": ["《毛泽东年谱》", "《开国大典》"],
-    "images": ["images/events/1949-founding.jpg"]
+    "tags": [
+      "建国",
+      "天安门",
+      "开国大典",
+      "人民共和国"
+    ],
+    "sources": [
+      "《毛泽东年谱》",
+      "《开国大典》"
+    ],
+    "images": [
+      "images/events/1949-founding.jpg",
+      "images/events/1949-jianguo.jpg"
+    ],
+    "content": "1949年10月1日下午3时，中华人民共和国开国大典在北京天安门广场隆重举行。毛泽东主席在天安门城楼上庄严宣告：'中华人民共和国中央人民政府今天成立了！'",
+    "image": "images/events/1949-jianguo.jpg"
+  },
+  {
+    "id": "1950-10-huanxisha-liuyazi",
+    "date": "1950-10-01",
+    "year": 1950,
+    "age": 56,
+    "type": "poem",
+    "importance": "medium",
+    "title": "《浣溪沙·和柳亚子先生》",
+    "location": {
+      "province": "北京市",
+      "city": "北京市",
+      "district": "东城区",
+      "detail": "中南海",
+      "coordinates": [
+        116.384064,
+        39.928847
+      ]
+    },
+    "description": "毛泽东在北京创作《浣溪沙·和柳亚子先生》。",
+    "content": "1950年国庆节，毛泽东在北京创作《浣溪沙·和柳亚子先生》：'长夜难明赤县天，百年魔怪舞翩跹，人民五亿不团圆。一唱雄鸡天下白，万方乐奏有于阗，诗人兴会更无前。'",
+    "image": "images/events/1950-huanxisha.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1950-huanxisha.jpg"
+    ]
+  },
+  {
+    "id": "1954-08-langtaosha-beidaihe",
+    "date": "1954-08-01",
+    "year": 1954,
+    "age": 60,
+    "type": "poem",
+    "importance": "medium",
+    "title": "《浪淘沙·北戴河》",
+    "location": {
+      "province": "河北省",
+      "city": "秦皇岛市",
+      "district": "北戴河区",
+      "detail": "北戴河海滨",
+      "coordinates": [
+        119.484444,
+        39.834167
+      ]
+    },
+    "description": "毛泽东在北戴河创作《浪淘沙·北戴河》。",
+    "content": "1954年夏，毛泽东在北戴河海滨创作《浪淘沙·北戴河》：'大雨落幽燕，白浪滔天，秦皇岛外打鱼船。一片汪洋都不见，知向谁边？往事越千年，魏武挥鞭，东临碣石有遗篇。萧瑟秋风今又是，换了人间。'",
+    "image": "images/events/1954-langtaosha.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1954-langtaosha.jpg"
+    ]
+  },
+  {
+    "id": "1956-06-shuidiaogetou-youyong",
+    "date": "1956-06-01",
+    "year": 1956,
+    "age": 62,
+    "type": "poem",
+    "importance": "high",
+    "title": "《水调歌头·游泳》",
+    "location": {
+      "province": "湖北省",
+      "city": "武汉市",
+      "district": "武昌区",
+      "detail": "长江",
+      "coordinates": [
+        114.305392,
+        30.593099
+      ]
+    },
+    "description": "毛泽东在武汉长江游泳时创作《水调歌头·游泳》。",
+    "content": "1956年6月，毛泽东在武汉长江游泳时创作《水调歌头·游泳》：'才饮长沙水，又食武昌鱼。万里长江横渡，极目楚天舒。不管风吹浪打，胜似闲庭信步，今日得宽余。子在川上曰：逝者如斯夫！'",
+    "image": "images/events/1956-youyong.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1956-youyong.jpg"
+    ]
+  },
+  {
+    "id": "1957-02-27-correct-handling",
+    "date": "1957-02-27",
+    "year": 1957,
+    "age": 63,
+    "type": "article",
+    "importance": "high",
+    "title": "《关于正确处理人民内部矛盾的问题》",
+    "location": {
+      "province": "北京市",
+      "city": "北京市",
+      "district": "西城区",
+      "detail": "中南海",
+      "coordinates": [
+        116.386515,
+        39.906901
+      ]
+    },
+    "description": "毛泽东发表《关于正确处理人民内部矛盾的问题》的重要讲话。",
+    "content": {
+      "title": "关于正确处理人民内部矛盾的问题",
+      "date": "1957年2月27日",
+      "excerpt": "在我们的面前有两类社会矛盾，这就是敌我之间的矛盾和人民内部的矛盾。这是性质完全不同的两类矛盾。",
+      "significance": "这篇著作丰富和发展了马克思主义关于社会主义社会矛盾的学说。"
+    },
+    "significance": "这是毛泽东关于社会主义建设的重要理论贡献，对处理新时期的社会矛盾具有重要指导意义。",
+    "tags": [
+      "文章",
+      "人民内部矛盾",
+      "社会主义",
+      "理论"
+    ],
+    "sources": [
+      "《毛泽东选集》"
+    ],
+    "images": [
+      "images/events/1957-contradictions.jpg"
+    ]
+  },
+  {
+    "id": "1957-05-dielianhua-lishuyi",
+    "date": "1957-05-11",
+    "year": 1957,
+    "age": 63,
+    "type": "poem",
+    "importance": "high",
+    "title": "《蝶恋花·答李淑一》",
+    "location": {
+      "province": "北京市",
+      "city": "北京市",
+      "district": "西城区",
+      "detail": "中南海",
+      "coordinates": [
+        116.384064,
+        39.928847
+      ]
+    },
+    "description": "毛泽东在北京创作《蝶恋花·答李淑一》，悼念杨开慧。",
+    "content": "1957年5月11日，毛泽东写下《蝶恋花·答李淑一》：'我失骄杨君失柳，杨柳轻飏直上重霄九。问讯吴刚何所有，吴刚捧出桂花酒。寂寞嫦娥舒广袖，万里长空且为忠魂舞。忽报人间曾伏虎，泪飞顿作倾盆雨。'",
+    "image": "images/events/1957-dielianhua.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1957-dielianhua.jpg"
+    ]
+  },
+  {
+    "id": "1959-06-qilv-shaoshan",
+    "date": "1959-06-25",
+    "year": 1959,
+    "age": 65,
+    "type": "poem",
+    "importance": "high",
+    "title": "《七律·到韶山》",
+    "location": {
+      "province": "湖南省",
+      "city": "湘潭市",
+      "district": "韶山市",
+      "detail": "韶山冲",
+      "coordinates": [
+        112.527621,
+        27.915456
+      ]
+    },
+    "description": "毛泽东回到故乡韶山，创作《七律·到韶山》。",
+    "content": "1959年6月25日，毛泽东回到阔别32年的故乡韶山，创作《七律·到韶山》：'别梦依稀咒逝川，故园三十二年前。红旗卷起农奴戟，黑手高悬霸主鞭。为有牺牲多壮志，敢教日月换新天。喜看稻菽千重浪，遍地英雄下夕烟。'",
+    "image": "images/events/1959-shaoshan.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1959-shaoshan.jpg"
+    ]
+  },
+  {
+    "id": "1961-12-busuanzi-yongmei",
+    "date": "1961-12-01",
+    "year": 1961,
+    "age": 67,
+    "type": "poem",
+    "importance": "medium",
+    "title": "《卜算子·咏梅》",
+    "location": {
+      "province": "北京市",
+      "city": "北京市",
+      "district": "西城区",
+      "detail": "中南海",
+      "coordinates": [
+        116.384064,
+        39.928847
+      ]
+    },
+    "description": "毛泽东在北京创作《卜算子·咏梅》。",
+    "content": "1961年12月，毛泽东创作《卜算子·咏梅》：'读陆游咏梅词，反其意而用之。风雨送春归，飞雪迎春到。已是悬崖百丈冰，犹有花枝俏。俏也不争春，只把春来报。待到山花烂漫时，她在丛中笑。'",
+    "image": "images/events/1961-yongmei.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1961-yongmei.jpg"
+    ]
+  },
+  {
+    "id": "1963-01-manjianhong-guomoruo",
+    "date": "1963-01-09",
+    "year": 1963,
+    "age": 69,
+    "type": "poem",
+    "importance": "medium",
+    "title": "《满江红·和郭沫若同志》",
+    "location": {
+      "province": "北京市",
+      "city": "北京市",
+      "district": "西城区",
+      "detail": "中南海",
+      "coordinates": [
+        116.384064,
+        39.928847
+      ]
+    },
+    "description": "毛泽东在北京创作《满江红·和郭沫若同志》。",
+    "content": "1963年1月9日，毛泽东创作《满江红·和郭沫若同志》：'小小寰球，有几个苍蝇碰壁。嗡嗡叫，几声凄厉，几声抽泣。蚂蚁缘槐夸大国，蚍蜉撼树谈何易。正西风落叶下长安，飞鸣镝。'",
+    "image": "images/events/1963-manjianhong.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1963-manjianhong.jpg"
+    ]
+  },
+  {
+    "id": "1965-05-shuidiaogetou-jinggangshan",
+    "date": "1965-05-01",
+    "year": 1965,
+    "age": 71,
+    "type": "poem",
+    "importance": "high",
+    "title": "《水调歌头·重上井冈山》",
+    "location": {
+      "province": "江西省",
+      "city": "吉安市",
+      "district": "井冈山市",
+      "detail": "井冈山",
+      "coordinates": [
+        114.289398,
+        26.748016
+      ]
+    },
+    "description": "毛泽东重上井冈山，创作《水调歌头·重上井冈山》。",
+    "content": "1965年5月，毛泽东重上井冈山，创作《水调歌头·重上井冈山》：'久有凌云志，重上井冈山。千里来寻故地，旧貌变新颜。到处莺歌燕舞，更有潺潺流水，高路入云端。过了黄洋界，险处不须看。'",
+    "image": "images/events/1965-jinggangshan.jpg",
+    "tags": [],
+    "sources": [],
+    "images": [
+      "images/events/1965-jinggangshan.jpg"
+    ]
   },
   {
     "id": "1976-09-09-death",
@@ -394,69 +1543,27 @@ export const eventsData = [
       "city": "北京市",
       "district": "西城区",
       "detail": "中南海",
-      "coordinates": [116.386515, 39.906901]
+      "coordinates": [
+        116.386515,
+        39.906901
+      ]
     },
-    "description": "毛泽东在北京逝世，享年83岁。中国人民的伟大领袖、马克思主义者、伟大的无产阶级革命家、战略家和理论家走完了他波澜壮阔的一生。",
+    "description": "毛泽东在北京逝世，享年83岁。",
     "significance": "毛泽东的逝世标志着一个时代的结束，他为中国革命和建设事业建立的丰功伟绩将永远被人民铭记。",
-    "tags": ["逝世", "北京", "中南海", "伟大领袖"],
-    "sources": ["《毛泽东年谱》"],
-    "images": ["images/events/1976-death.jpg"]
-  },
-  {
-    "id": "1936-02-01-snow",
-    "date": "1936-02-01",
-    "year": 1936,
-    "age": 42,
-    "type": "poem",
-    "importance": "high",
-    "title": "《沁园春·雪》",
-    "location": {
-      "province": "陕西省",
-      "city": "延安市",
-      "district": "宝塔区",
-      "detail": "延安",
-      "coordinates": [109.489727, 36.596537]
-    },
-    "description": "毛泽东在延安创作了气势磅礴的《沁园春·雪》，展现了伟大的胸怀和抱负。",
-    "content": {
-      "title": "沁园春·雪",
-      "subtitle": "1936年2月",
-      "text": "北国风光，千里冰封，万里雪飘。\n望长城内外，惟余莽莽；\n大河上下，顿失滔滔。\n山舞银蛇，原驰蜡象，\n欲与天公试比高。\n须晴日，看红装素裹，\n分外妖娆。\n\n江山如此多娇，\n引无数英雄竞折腰。\n惜秦皇汉武，略输文采；\n唐宗宋祖，稍逊风骚。\n一代天骄，成吉思汗，\n只识弯弓射大雕。\n俱往矣，数风流人物，\n还看今朝。",
-      "background": "1936年2月，毛泽东率领红军长征到达陕北后，在一个雪后初晴的日子里，面对祖国的壮丽河山，写下了这首千古名篇。",
-      "artistic_value": "这首词气势恢宏，意境壮阔，既有对祖国山河的赞美，又有对历史人物的评价，最后点出了当代无产阶级革命家的历史使命。"
-    },
-    "significance": "这是毛泽东最著名的诗词之一，体现了无产阶级革命家的宏伟气魄和远大理想。",
-    "tags": ["诗词", "沁园春", "雪", "延安"],
-    "sources": ["《毛泽东诗词集》"],
-    "images": ["images/events/1936-snow.jpg"]
-  },
-  {
-    "id": "1940-01-01-new-democracy",
-    "date": "1940-01-01",
-    "year": 1940,
-    "age": 46,
-    "type": "article",
-    "importance": "high",
-    "title": "发表《新民主主义论》",
-    "location": {
-      "province": "陕西省",
-      "city": "延安市",
-      "district": "宝塔区",
-      "detail": "延安",
-      "coordinates": [109.489727, 36.596537]
-    },
-    "description": "毛泽东发表《新民主主义论》，系统阐述了新民主主义革命的理论。",
-    "content": {
-      "title": "新民主主义论",
-      "date": "1940年1月",
-      "excerpt": "中国革命的历史进程，必须分为两步，其第一步是民主主义的革命，其第二步是社会主义的革命，这是性质不同的两个革命过程。而所谓民主主义，现在已不是旧范畴的民主主义，不是旧民主主义，而是新范畴的民主主义，而是新民主主义。",
-      "significance": "这篇著作系统地阐述了新民主主义革命的理论，为中国革命指明了正确道路。"
-    },
-    "significance": "这是毛泽东思想的重要组成部分，为中国革命提供了科学的理论指导。",
-    "tags": ["理论", "新民主主义", "延安", "革命"],
-    "sources": ["《毛泽东选集》"],
-    "images": ["images/events/1940-new-democracy.jpg"]
+    "tags": [
+      "逝世",
+      "北京",
+      "中南海",
+      "伟大领袖"
+    ],
+    "sources": [
+      "《毛泽东年谱》"
+    ],
+    "images": [
+      "images/events/1976-death.jpg",
+      "images/events/1976-shishi.jpg"
+    ],
+    "content": "1976年9月9日零时10分，中国共产党中央委员会主席、中国共产党中央军事委员会主席、中国人民政治协商会议全国委员会名誉主席毛泽东在北京逝世，享年83岁。",
+    "image": "images/events/1976-shishi.jpg"
   }
 ];
-
-console.log('事件数据已加载:', eventsData.length, '个事件');
