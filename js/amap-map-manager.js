@@ -232,147 +232,67 @@ export default class AMapManager {
             if (!this.movingFootprintMarker) {
                 this.movingFootprintMarker = new AMap.Marker({
                     position: startPos,
-                    content: '<div style="width: 26px; height: 26px; background-color: #ff4444; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(255,68,68,0.6);"></div>',
-                    offset: new AMap.Pixel(-13, -13),
+                    content: `
+                        <div class="mao-footprint-container">
+                            <svg viewBox="0 0 100 100" width="32" height="32" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                                <circle cx="50" cy="50" r="46" fill="#d32f2f" stroke="#ffd700" stroke-width="4"/>
+                                <ellipse cx="50" cy="65" rx="30" ry="12" fill="rgba(0,0,0,0.25)"/>
+                                <path d="M 24,55 C 24,35 34,26 50,26 C 66,26 76,35 76,55 Z" fill="#8ca0ba" stroke="#2c3e50" stroke-width="3"/>
+                                <path d="M 50,26 L 50,55 M 34,36 L 50,55 M 66,36 L 50,55" stroke="#2c3e50" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M 18,54 C 18,54 28,62 50,62 C 72,62 82,54 82,54 C 82,54 74,68 50,68 C 26,68 18,54 18,54 Z" fill="#2c3e50"/>
+                                <polygon points="50,33 53,40 60,40 55,44 57,51 50,47 43,51 45,44 40,40 47,40" fill="#ff1744"/>
+                            </svg>
+                        </div>
+                    `,
+                    offset: new AMap.Pixel(-16, -16),
                     map: this.map
                 });
             }
 
             let startTime = null;
-            let phase = 'zoomOut';
-            let phaseStartTime = null;
-            let eventTriggered = false; // 添加标志防止重复触发事件
-            const pauseDuration = 600; // 减少停留时间
+            let eventTriggered = false;
 
-            // 根据动画类型调整时间分配
-            let zoomOutDuration, moveDuration, zoomInDuration;
-
-            if (animationType === 'intracity') {
-                // 同城移动：快速拉近 -> 慢速移动 -> 稍微调整
-                zoomOutDuration = duration * 0.15;
-                moveDuration = duration * 0.7;
-                zoomInDuration = duration * 0.15;
-            } else if (animationType === 'intercity') {
-                // 城际移动：适中拉远 -> 适中移动 -> 拉近
-                zoomOutDuration = duration * 0.2;
-                moveDuration = duration * 0.6;
-                zoomInDuration = duration * 0.2;
-            } else {
-                // 长距离移动：明显拉远 -> 快速移动 -> 拉近
-                zoomOutDuration = duration * 0.25;
-                moveDuration = duration * 0.5;
-                zoomInDuration = duration * 0.25;
-            }
+            // 1. 触发高德原生的变焦与位移飞越动画（硬件加速，平滑过渡，彻底解决频繁重绘导致的黑屏与底图白块）
+            this.map.setZoomAndCenter(zoomInLevel, endPos);
 
             // 缓动函数
             const easeInOutCubic = (t) => {
                 return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
             };
 
-            const easeOutQuad = (t) => {
-                return 1 - (1 - t) * (1 - t);
-            };
-
+            // 2. 通过 requestAnimationFrame 仅负责更新行进 Marker 坐标与动感轨迹线
             const animate = (currentTime) => {
-                if (!startTime) {
-                    startTime = currentTime;
-                    phaseStartTime = currentTime;
+                if (!startTime) startTime = currentTime;
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easedProgress = easeInOutCubic(progress);
+
+                if (progress > 0.1 && !eventTriggered) {
+                    this.emit('eventReached', endEvent);
+                    eventTriggered = true;
                 }
 
-                const phaseElapsed = currentTime - phaseStartTime;
+                const currentLng = startPos.getLng() + (endPos.getLng() - startPos.getLng()) * easedProgress;
+                const currentLat = startPos.getLat() + (endPos.getLat() - startPos.getLat()) * easedProgress;
+                const currentPos = new AMap.LngLat(currentLng, currentLat);
 
-                if (phase === 'zoomOut') {
-                    // 阶段1：调整地图缩放
-                    const progress = Math.min(phaseElapsed / zoomOutDuration, 1);
-                    const easedProgress = easeOutQuad(progress);
+                // 更新 Marker 位置
+                this.movingFootprintMarker.setPosition(currentPos);
 
-                    if (progress < 1) {
-                        const currentZoom = this.map.getZoom();
-                        const targetZoom = zoomOutLevel;
-                        const newZoom = currentZoom + (targetZoom - currentZoom) * easedProgress;
-                        this.map.setZoom(newZoom);
-                        requestAnimationFrame(animate);
-                    } else {
-                        this.map.setZoom(zoomOutLevel);
+                // 绘制行动轨迹线
+                const animatedPath = this.animatedTrajectory.getPath();
+                if (animatedPath.length === 0 || animatedPath[animatedPath.length - 1].toString() !== currentPos.toString()) {
+                    animatedPath.push(currentPos);
+                    this.animatedTrajectory.setPath(animatedPath);
+                }
 
-                        // 等待地图缩放和图层加载完成
-                        setTimeout(() => {
-                            phase = 'move';
-                            phaseStartTime = performance.now();
-                            requestAnimationFrame(animate);
-                        }, 200);
-                    }
-                } else if (phase === 'move') {
-                    // 阶段2：移动
-                    const progress = Math.min(phaseElapsed / moveDuration, 1);
-
-                    // 根据动画类型选择不同的缓动效果
-                    let easedProgress;
-                    if (animationType === 'intracity') {
-                        easedProgress = progress; // 同城移动使用线性
-                    } else {
-                        easedProgress = easeInOutCubic(progress);
-                    }
-
-                    if (progress < 1) {
-                        const currentLng = startPos.getLng() + (endPos.getLng() - startPos.getLng()) * easedProgress;
-                        const currentLat = startPos.getLat() + (endPos.getLat() - startPos.getLat()) * easedProgress;
-                        const currentPos = new AMap.LngLat(currentLng, currentLat);
-
-                        this.movingFootprintMarker.setPosition(currentPos);
-                        this.map.setCenter(currentPos);
-
-                        // Update animated trajectory
-                        const animatedPath = this.animatedTrajectory.getPath();
-                        if (animatedPath.length === 0 || animatedPath[animatedPath.length - 1].toString() !== currentPos.toString()) {
-                            animatedPath.push(currentPos);
-                            this.animatedTrajectory.setPath(animatedPath);
-                        }
-
-                        requestAnimationFrame(animate);
-                    } else {
-                        this.movingFootprintMarker.setPosition(endPos);
-                        this.map.setCenter(endPos);
-
-                        phase = 'zoomIn';
-                        phaseStartTime = currentTime;
-                        requestAnimationFrame(animate);
-                    }
-                } else if (phase === 'zoomIn') {
-                    // 阶段3：调整到最终缩放级别
-                    const progress = Math.min(phaseElapsed / zoomInDuration, 1);
-                    const easedProgress = easeOutQuad(progress);
-
-                    if (progress < 1) {
-                        const currentZoom = this.map.getZoom();
-                        const targetZoom = zoomInLevel;
-                        const newZoom = currentZoom + (targetZoom - currentZoom) * easedProgress;
-                        this.map.setZoom(newZoom);
-                        requestAnimationFrame(animate);
-                    } else {
-                        this.map.setZoom(zoomInLevel);
-
-                        // 等待最终缩放完成
-                        setTimeout(() => {
-                            phase = 'pause';
-                            phaseStartTime = performance.now();
-                            requestAnimationFrame(animate);
-                        }, 150);
-                    }
-                } else if (phase === 'pause') {
-                    // 阶段4：停留展示
-                    if (!eventTriggered) {
-                        // 只触发一次事件更新
-                        this.emit('eventReached', endEvent);
-                        console.log('AMap Event reached and details updated:', endEvent.title);
-                        eventTriggered = true;
-                    }
-
-                    if (phaseElapsed < pauseDuration) {
-                        requestAnimationFrame(animate);
-                    } else {
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    // 到达目的地，稍微留白缓冲
+                    setTimeout(() => {
                         resolve();
-                    }
+                    }, 200);
                 }
             };
 

@@ -50,4 +50,6 @@ worktrees/
 .agents/
 output/
 AGENTS.md
-
+.opencode/
+docs/
+bun.lock

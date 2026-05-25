@@ -230,79 +230,77 @@ export default class LeafletMapManager {
                 totalDuration = Math.max(2500, Math.min(4000, distance * 0.005));
             }
 
-            const zoomOutDuration = totalDuration * 0.12;
-            const moveDuration = totalDuration * 0.65;
-            const zoomInDuration = totalDuration * 0.12;
-
             if (!this.movingFootprintMarker) {
                 this.movingFootprintMarker = L.marker(startPos, {
                     icon: L.divIcon({
                         className: 'mao-footprint-icon',
-                        html: '<div style="width:26px;height:26px;background:#ff4444;border-radius:50%;border:2px solid #fff;box-shadow:0 0 12px rgba(255,68,68,0.6);"></div>',
-                        iconSize: [26, 26],
-                        iconAnchor: [13, 13]
+                        html: `
+                            <div class="mao-footprint-container">
+                                <svg viewBox="0 0 100 100" width="32" height="32" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                                    <circle cx="50" cy="50" r="46" fill="#d32f2f" stroke="#ffd700" stroke-width="4"/>
+                                    <ellipse cx="50" cy="65" rx="30" ry="12" fill="rgba(0,0,0,0.25)"/>
+                                    <path d="M 24,55 C 24,35 34,26 50,26 C 66,26 76,35 76,55 Z" fill="#8ca0ba" stroke="#2c3e50" stroke-width="3"/>
+                                    <path d="M 50,26 L 50,55 M 34,36 L 50,55 M 66,36 L 50,55" stroke="#2c3e50" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M 18,54 C 18,54 28,62 50,62 C 72,62 82,54 82,54 C 82,54 74,68 50,68 C 26,68 18,54 18,54 Z" fill="#2c3e50"/>
+                                    <polygon points="50,33 53,40 60,40 55,44 57,51 50,47 43,51 45,44 40,40 47,40" fill="#ff1744"/>
+                                </svg>
+                            </div>
+                        `,
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16]
                     })
                 }).addTo(this.map);
             } else {
                 this.movingFootprintMarker.setLatLng(startPos);
             }
 
-            const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
             let startTime = null;
-            let phase = 'zoomOut';
-            let phaseStartTime = null;
             let eventTriggered = false;
 
+            // 1. 触发 Leaflet 原生的飞越平滑动画（CSS 3D 变焦+平移，彻底避免每帧强制重绘导致的黑屏瓦片丢失）
+            this.map.flyTo(endPos, targetZoom, {
+                duration: totalDuration / 1000,
+                easeLinearity: 0.25
+            });
+
+            // 2. 通过 requestAnimationFrame 只更新 Marker 位置与画轨迹线
             const animate = (currentTime) => {
-                if (!startTime) { startTime = currentTime; phaseStartTime = currentTime; }
-                const elapsed = currentTime - phaseStartTime;
+                if (!startTime) startTime = currentTime;
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / totalDuration, 1);
 
-                if (phase === 'zoomOut') {
-                    const progress = Math.min(elapsed / zoomOutDuration, 1);
-                    const newZoom = currentZoom + (targetZoom - currentZoom) * easeInOutCubic(progress);
-                    this.map.setZoom(newZoom);
-                    if (progress >= 1) { phase = 'move'; phaseStartTime = currentTime; }
+                if (progress > 0.1 && !eventTriggered) {
+                    this.emit('eventReached', endEvent);
+                    eventTriggered = true;
+                }
+
+                const lat = startPos.lat + (endPos.lat - startPos.lat) * progress;
+                const lng = startPos.lng + (endPos.lng - startPos.lng) * progress;
+                const currentPos = L.latLng(lat, lng);
+
+                // 只更新足迹点坐标
+                this.movingFootprintMarker.setLatLng(currentPos);
+
+                // 绘制行动轨迹
+                if (!this.animatedTrajectory) {
+                    this.animatedTrajectory = L.polyline([startPos], {
+                        color: '#ff4444', weight: 3, opacity: 0.8
+                    }).addTo(this.map);
+                }
+                const path = this.animatedTrajectory.getLatLngs();
+                const last = path[path.length - 1];
+                if (!last || last.distanceTo(currentPos) > 500) {
+                    path.push(currentPos);
+                    this.animatedTrajectory.setLatLngs(path);
+                }
+
+                if (progress < 1) {
                     requestAnimationFrame(animate);
-                } else if (phase === 'move') {
-                    const progress = Math.min(elapsed / moveDuration, 1);
-
-                    if (progress > 0 && !eventTriggered) {
-                        this.emit('eventReached', endEvent);
-                        eventTriggered = true;
-                    }
-
-                    const lat = startPos.lat + (endPos.lat - startPos.lat) * progress;
-                    const lng = startPos.lng + (endPos.lng - startPos.lng) * progress;
-                    const currentPos = L.latLng(lat, lng);
-
-                    this.movingFootprintMarker.setLatLng(currentPos);
-                    this.map.panTo(currentPos, { animate: false });
-
-                    if (!this.animatedTrajectory) {
-                        this.animatedTrajectory = L.polyline([startPos], {
-                            color: '#ff4444', weight: 3, opacity: 0.8
-                        }).addTo(this.map);
-                    }
-                    const path = this.animatedTrajectory.getLatLngs();
-                    const last = path[path.length - 1];
-                    if (!last || last.distanceTo(currentPos) > 500) {
-                        path.push(currentPos);
-                        this.animatedTrajectory.setLatLngs(path);
-                    }
-
-                    if (progress >= 1) {
-                        if (zoomInDuration > 0) { phase = 'zoomIn'; phaseStartTime = currentTime; }
-                        else { phase = 'finish'; phaseStartTime = currentTime; }
-                    }
-                    requestAnimationFrame(animate);
-                } else if (phase === 'zoomIn') {
-                    const progress = Math.min(elapsed / zoomInDuration, 1);
-                    if (progress >= 1) { phase = 'finish'; phaseStartTime = currentTime; }
-                    requestAnimationFrame(animate);
-                } else if (phase === 'finish') {
-                    if (elapsed < 600) { requestAnimationFrame(animate); }
-                    else { resolve(); }
+                } else {
+                    // 到达目的地，稍作停留后完成 Promise
+                    setTimeout(() => {
+                        resolve();
+                    }, 200);
                 }
             };
 
