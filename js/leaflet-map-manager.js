@@ -257,25 +257,41 @@ export default class LeafletMapManager {
             let startTime = null;
             let eventTriggered = false;
 
-            // 1. 触发 Leaflet 原生的飞越平滑动画（CSS 3D 变焦+平移，彻底避免每帧强制重绘导致的黑屏瓦片丢失）
-            this.map.flyTo(endPos, targetZoom, {
-                duration: totalDuration / 1000,
-                easeLinearity: 0.25
-            });
+            // 1. 触发地图位移动画：中短距离（<50km）使用平稳 panTo，长距离（>=50km）使用宏大的 flyTo
+            if (distance < 50000) {
+                // 如果需要改变缩放级别，我们只先平滑设置一次
+                if (this.map.getZoom() !== targetZoom) {
+                    this.map.setZoom(targetZoom, { animate: true });
+                }
+                this.map.panTo(endPos, {
+                    animate: true,
+                    duration: totalDuration / 1000
+                });
+            } else {
+                this.map.flyTo(endPos, targetZoom, {
+                    duration: totalDuration / 1000,
+                    easeLinearity: 0.25
+                });
+            }
+
+            // 三次缓动函数，与地图自身的平移加速度完全对齐
+            const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
             // 2. 通过 requestAnimationFrame 只更新 Marker 位置与画轨迹线
             const animate = (currentTime) => {
                 if (!startTime) startTime = currentTime;
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / totalDuration, 1);
+                const easedProgress = easeInOutCubic(progress);
 
                 if (progress > 0.1 && !eventTriggered) {
                     this.emit('eventReached', endEvent);
                     eventTriggered = true;
                 }
 
-                const lat = startPos.lat + (endPos.lat - startPos.lat) * progress;
-                const lng = startPos.lng + (endPos.lng - startPos.lng) * progress;
+                // 采用 easedProgress 消除 Marker 与地图背景滑移的割裂撕裂感
+                const lat = startPos.lat + (endPos.lat - startPos.lat) * easedProgress;
+                const lng = startPos.lng + (endPos.lng - startPos.lng) * easedProgress;
                 const currentPos = L.latLng(lat, lng);
 
                 // 只更新足迹点坐标

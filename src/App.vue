@@ -63,7 +63,7 @@ const timelineReserve = ref(160);
 let timelineRailObserver = null;
 
 const shellStyle = computed(() => ({
-    '--shell-timeline-reserve': `${Math.max(Math.ceil(timelineReserve.value), 144)}px`
+    '--shell-timeline-reserve': `${Math.max(Math.ceil(timelineReserve.value), 96)}px`
 }));
 
 function updateTimelineReserve() {

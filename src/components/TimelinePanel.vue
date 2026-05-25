@@ -130,7 +130,7 @@ function nextEvent() {
 <style scoped>
 .timeline {
     width: 100%;
-    padding: 16px 18px 18px;
+    padding: 10px 14px 12px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
     background: rgba(20, 20, 20, 0.92);
@@ -138,7 +138,7 @@ function nextEvent() {
     box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 8px;
     overflow: hidden;
 }
 
@@ -146,32 +146,32 @@ function nextEvent() {
 .timeline__info {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 .timeline__year-box {
     flex-shrink: 0;
-    padding: 10px 14px;
+    padding: 6px 10px;
     border-radius: var(--radius-lg);
     background: linear-gradient(135deg, rgba(211, 47, 47, 0.3), rgba(50, 30, 25, 0.9));
     border: 1px solid rgba(211, 47, 47, 0.25);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    min-width: 80px;
+    gap: 2px;
+    min-width: 68px;
 }
 
 .timeline__year {
-    font-size: 28px;
+    font-size: 22px;
     line-height: 1;
     font-family: var(--font-heading);
 }
 
 .timeline__age {
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-secondary);
-    padding: 1px 8px;
+    padding: 1px 6px;
     border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.06);
 }
@@ -182,30 +182,30 @@ function nextEvent() {
 }
 
 .timeline__title {
-    font-size: 17px;
+    font-size: 15px;
     line-height: 1.3;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .timeline__sub {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .timeline__chip {
     display: inline-flex;
     align-items: center;
-    padding: 1px 8px;
+    padding: 1px 6px;
     border-radius: var(--radius-full);
     background: rgba(255, 215, 0, 0.1);
     color: var(--color-secondary);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
 }
 
@@ -218,8 +218,8 @@ function nextEvent() {
 }
 
 .tl-btn {
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
     border-radius: var(--radius-full);
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-color);
@@ -227,7 +227,7 @@ function nextEvent() {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 12px;
     transition: all var(--transition-normal);
 }
 
@@ -238,12 +238,12 @@ function nextEvent() {
 }
 
 .tl-btn--play {
-    width: 46px;
-    height: 46px;
+    width: 38px;
+    height: 38px;
     background: linear-gradient(135deg, rgba(211, 47, 47, 0.85), rgba(211, 47, 47, 0.5));
     border-color: rgba(211, 47, 47, 0.4);
     color: #fff;
-    font-size: 16px;
+    font-size: 14px;
     box-shadow: var(--shadow-glow-primary);
 }
 
@@ -257,8 +257,8 @@ function nextEvent() {
 
 .tl-btn--speed {
     width: auto;
-    padding: 0 12px;
-    font-size: 12px;
+    padding: 0 10px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--color-secondary);
     letter-spacing: 0.03em;
@@ -268,20 +268,20 @@ function nextEvent() {
 .timeline__track-wrap {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .timeline__years {
     display: flex;
     justify-content: space-between;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-muted);
 }
 
 .timeline__track {
     --progress: 0%;
     position: relative;
-    height: 40px;
+    height: 24px;
     display: flex;
     align-items: center;
 }

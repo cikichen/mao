@@ -252,8 +252,15 @@ export default class AMapManager {
             let startTime = null;
             let eventTriggered = false;
 
-            // 1. 触发高德原生的变焦与位移飞越动画（硬件加速，平滑过渡，彻底解决频繁重绘导致的黑屏与底图白块）
-            this.map.setZoomAndCenter(zoomInLevel, endPos);
+            // 1. 触发地图位移动画：中短距离（<50km）使用平稳 panTo，长距离（>=50km）使用 setZoomAndCenter 飞越
+            if (distance < 50000) {
+                if (this.map.getZoom() !== zoomInLevel) {
+                    this.map.setZoom(zoomInLevel);
+                }
+                this.map.panTo(endPos);
+            } else {
+                this.map.setZoomAndCenter(zoomInLevel, endPos);
+            }
 
             // 缓动函数
             const easeInOutCubic = (t) => {
