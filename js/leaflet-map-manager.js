@@ -256,13 +256,11 @@ export default class LeafletMapManager {
 
             let startTime = null;
             let eventTriggered = false;
+            let frameCount = 0; // 轨迹更新节流计数器
 
-            // 1. 触发地图位移动画：中短距离（<50km）使用平稳 panTo，长距离（>=50km）使用宏大的 flyTo
-            if (distance < 50000) {
-                // 如果需要改变缩放级别，我们只先平滑设置一次
-                if (this.map.getZoom() !== targetZoom) {
-                    this.map.setZoom(targetZoom, { animate: true });
-                }
+            // 1. 触发地图位移动画：只有当缩放级别不需要变动且属于短距离（<50km）时，才执行 panTo。
+            // 只要缩放值发生改变，一律统一由 flyTo 独自管理（彻底杜绝 panTo 与 setZoom 冲突引起的画面疯狂震颤与花屏）
+            if (distance < 50000 && this.map.getZoom() === targetZoom) {
                 this.map.panTo(endPos, {
                     animate: true,
                     duration: totalDuration / 1000
@@ -283,6 +281,7 @@ export default class LeafletMapManager {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / totalDuration, 1);
                 const easedProgress = easeInOutCubic(progress);
+                frameCount++;
 
                 if (progress > 0.1 && !eventTriggered) {
                     this.emit('eventReached', endEvent);
@@ -294,20 +293,22 @@ export default class LeafletMapManager {
                 const lng = startPos.lng + (endPos.lng - startPos.lng) * easedProgress;
                 const currentPos = L.latLng(lat, lng);
 
-                // 只更新足迹点坐标
+                // 只更新足迹点坐标（Marker 的 setLatLng 极轻量，每帧执行确保头像运动极致丝滑）
                 this.movingFootprintMarker.setLatLng(currentPos);
 
-                // 绘制行动轨迹
-                if (!this.animatedTrajectory) {
-                    this.animatedTrajectory = L.polyline([startPos], {
-                        color: '#ff4444', weight: 3, opacity: 0.8
-                    }).addTo(this.map);
-                }
-                const path = this.animatedTrajectory.getLatLngs();
-                const last = path[path.length - 1];
-                if (!last || last.distanceTo(currentPos) > 500) {
-                    path.push(currentPos);
-                    this.animatedTrajectory.setLatLngs(path);
+                // 3. 节流绘制行动轨迹线（每 5 帧或到达终点时才更新一次 Polyline，避免每帧高频重绘折线导致的 CPU/GPU 渲染线程卡死）
+                if (frameCount % 5 === 0 || progress >= 1) {
+                    if (!this.animatedTrajectory) {
+                        this.animatedTrajectory = L.polyline([startPos], {
+                            color: '#ff4444', weight: 3, opacity: 0.8
+                        }).addTo(this.map);
+                    }
+                    const path = this.animatedTrajectory.getLatLngs();
+                    const last = path[path.length - 1];
+                    if (!last || last.distanceTo(currentPos) > 500) {
+                        path.push(currentPos);
+                        this.animatedTrajectory.setLatLngs(path);
+                    }
                 }
 
                 if (progress < 1) {

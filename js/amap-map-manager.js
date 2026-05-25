@@ -251,12 +251,11 @@ export default class AMapManager {
 
             let startTime = null;
             let eventTriggered = false;
+            let frameCount = 0; // 轨迹更新节流计数器
 
-            // 1. 触发地图位移动画：中短距离（<50km）使用平稳 panTo，长距离（>=50km）使用 setZoomAndCenter 飞越
-            if (distance < 50000) {
-                if (this.map.getZoom() !== zoomInLevel) {
-                    this.map.setZoom(zoomInLevel);
-                }
+            // 1. 触发地图位移动画：只有当缩放级别不需要变动且属于中短距离（<50km）时，才单独调用 panTo。
+            // 只要缩放值发生改变，一律统一由 setZoomAndCenter 独自管理（彻底杜绝 panTo 与 setZoom 冲突引起的画面疯狂震颤与花屏）
+            if (distance < 50000 && this.map.getZoom() === zoomInLevel) {
                 this.map.panTo(endPos);
             } else {
                 this.map.setZoomAndCenter(zoomInLevel, endPos);
@@ -273,6 +272,7 @@ export default class AMapManager {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 const easedProgress = easeInOutCubic(progress);
+                frameCount++;
 
                 if (progress > 0.1 && !eventTriggered) {
                     this.emit('eventReached', endEvent);
@@ -283,14 +283,16 @@ export default class AMapManager {
                 const currentLat = startPos.getLat() + (endPos.getLat() - startPos.getLat()) * easedProgress;
                 const currentPos = new AMap.LngLat(currentLng, currentLat);
 
-                // 更新 Marker 位置
+                // 更新 Marker 位置（AMap setPosition 极轻量，每帧执行确保头像运动极致丝滑）
                 this.movingFootprintMarker.setPosition(currentPos);
 
-                // 绘制行动轨迹线
-                const animatedPath = this.animatedTrajectory.getPath();
-                if (animatedPath.length === 0 || animatedPath[animatedPath.length - 1].toString() !== currentPos.toString()) {
-                    animatedPath.push(currentPos);
-                    this.animatedTrajectory.setPath(animatedPath);
+                // 3. 节流绘制行动轨迹线（每 5 帧或到达终点时才更新一次 Polyline，避免每帧高频重绘折线导致的 CPU/GPU 渲染线程卡死）
+                if (frameCount % 5 === 0 || progress >= 1) {
+                    const animatedPath = this.animatedTrajectory.getPath();
+                    if (animatedPath.length === 0 || animatedPath[animatedPath.length - 1].toString() !== currentPos.toString()) {
+                        animatedPath.push(currentPos);
+                        this.animatedTrajectory.setPath(animatedPath);
+                    }
                 }
 
                 if (progress < 1) {

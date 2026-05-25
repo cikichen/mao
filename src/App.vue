@@ -283,6 +283,9 @@ onUnmounted(() => {
 /* Leaflet overrides */
 .leaflet-tile {
     filter: brightness(85%) contrast(90%) saturate(80%);
+    will-change: transform, filter;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .leaflet-control-attribution {
