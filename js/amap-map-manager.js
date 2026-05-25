@@ -182,9 +182,9 @@ export default class AMapManager {
         }
     }
 
-    // New: Animate a footprint marker along a path with smart zoom and speed control
+    // 三幕式电影镜头动画
     animateFootprint(startEvent, endEvent, baseDuration = 2000) {
-        return new Promise(resolve => {
+        return new Promise(async resolve => {
             if (!startEvent || !endEvent || !startEvent.coordinates || !endEvent.coordinates) {
                 resolve();
                 return;
@@ -192,70 +192,90 @@ export default class AMapManager {
 
             const startPos = new AMap.LngLat(startEvent.coordinates.lng, startEvent.coordinates.lat);
             const endPos = new AMap.LngLat(endEvent.coordinates.lng, endEvent.coordinates.lat);
-
-            // Calculate distance and determine animation strategy
             const distance = startPos.distance(endPos);
-            // 阶梯式距离-变焦与时间自适应法则（让同城微距事件聚焦街区，长途跃迁展示宏观，且保证短途也有平移动效）
-            let zoomInLevel, duration;
-            if (distance < 1500) {          // < 1.5km - 极近距离
-                zoomInLevel = 15;
-                duration = 2000;            // 保证至少有2秒看清位移与连线
-            } else if (distance < 10000) {  // 1.5km - 10km
-                zoomInLevel = 13;
-                duration = 2200;
-            } else if (distance < 50000) {  // 10km - 50km
-                zoomInLevel = 11;
-                duration = 2500;
-            } else if (distance < 200000) { // 50km - 200km
-                zoomInLevel = 9;
-                duration = 2800;
-            } else if (distance < 600000) { // 200km - 600km
-                zoomInLevel = 7;
-                duration = 3300;
-            } else {                        // >= 600km - 跨大半个中国
-                zoomInLevel = 5;
-                duration = 4000;
-            }
-
-            console.log(`AMap Distance: ${distance}m, duration: ${duration}ms, zoom: ${zoomInLevel}`);
 
             if (!this.movingFootprintMarker) {
                 this.movingFootprintMarker = new AMap.Marker({
                     position: startPos,
                     content: `
-                        <div class="mao-footprint-container">
-                            <svg viewBox="0 0 100 100" width="32" height="32" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                                <circle cx="50" cy="50" r="46" fill="#d32f2f" stroke="#ffd700" stroke-width="4"/>
-                                <ellipse cx="50" cy="65" rx="30" ry="12" fill="rgba(0,0,0,0.25)"/>
-                                <path d="M 24,55 C 24,35 34,26 50,26 C 66,26 76,35 76,55 Z" fill="#8ca0ba" stroke="#2c3e50" stroke-width="3"/>
-                                <path d="M 50,26 L 50,55 M 34,36 L 50,55 M 66,36 L 50,55" stroke="#2c3e50" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M 18,54 C 18,54 28,62 50,62 C 72,62 82,54 82,54 C 82,54 74,68 50,68 C 26,68 18,54 18,54 Z" fill="#2c3e50"/>
-                                <polygon points="50,33 53,40 60,40 55,44 57,51 50,47 43,51 45,44 40,40 47,40" fill="#ff1744"/>
-                            </svg>
-                        </div>
+                        <div class="mao-footprint-container"></div>
                     `,
-                    offset: new AMap.Pixel(-16, -16),
+                    offset: new AMap.Pixel(-18, -18),
                     map: this.map
                 });
+            } else {
+                this.movingFootprintMarker.setPosition(startPos);
+            }
+
+            const params = this._getAnimParams(distance);
+
+            // ── 第一幕：镜头拉远 ── 平滑缩放到鸟瞰视野
+            const centerLng = (startPos.getLng() + endPos.getLng()) / 2;
+            const centerLat = (startPos.getLat() + endPos.getLat()) / 2;
+            await this._smoothSetView(params.overviewZoom, [centerLng, centerLat], params.overviewDurMs);
+
+            // ── 第二幕：足迹行进 ── 在稳定视口上 Marker 滑动画线
+            await this._traverseMarker(startPos, endPos, endEvent, params.markerDur, distance);
+
+            // ── 第三幕：镜头推近 ── 平滑聚焦到目的地近景
+            await this._smoothSetView(params.destZoom, [endPos.getLng(), endPos.getLat()], params.zoomInDurMs);
+
+            resolve();
+        });
+    }
+
+    _getAnimParams(distance) {
+        if (distance < 1500)   return { overviewZoom: 16, overviewDurMs: 500,  markerDur: 1500, destZoom: 15, zoomInDurMs: 400 };
+        if (distance < 10000)  return { overviewZoom: 14, overviewDurMs: 600,  markerDur: 1800, destZoom: 14, zoomInDurMs: 500 };
+        if (distance < 50000)  return { overviewZoom: 12, overviewDurMs: 700,  markerDur: 2000, destZoom: 13, zoomInDurMs: 600 };
+        if (distance < 200000) return { overviewZoom: 10, overviewDurMs: 800,  markerDur: 2200, destZoom: 13, zoomInDurMs: 800 };
+        if (distance < 600000) return { overviewZoom: 8,  overviewDurMs: 800,  markerDur: 2500, destZoom: 12, zoomInDurMs: 800 };
+        return                        { overviewZoom: 6,  overviewDurMs: 1000, markerDur: 3000, destZoom: 12, zoomInDurMs: 1000 };
+    }
+
+    // 高德地图平滑视角过渡辅助
+    _smoothSetView(zoom, center, durationMs) {
+        return new Promise(resolve => {
+            const timeout = setTimeout(resolve, durationMs + 500);
+            this.map.on('moveend', function handler() {
+                clearTimeout(timeout);
+                // AMap 没有 once，需要手动 off
+                this.off('moveend', handler);
+                resolve();
+            });
+            this.map.setZoomAndCenter(zoom, center, false, durationMs);
+        });
+    }
+
+    // Marker 行进动画（第二幕核心）—— 地图完全静止
+    _traverseMarker(startPos, endPos, endEvent, durationMs, distance) {
+        return new Promise(resolve => {
+            // 远距离添加视觉效果
+            let previewLine = null;
+            let glowLine = null;
+            if (distance >= 200000) {
+                previewLine = new AMap.Polyline({
+                    path: [startPos, endPos],
+                    strokeColor: '#ff4444', strokeWeight: 1.5, strokeOpacity: 0.25,
+                    strokeStyle: 'dashed', strokeDasharray: [8, 6]
+                });
+                this.map.add(previewLine);
+                glowLine = new AMap.Polyline({
+                    path: [startPos],
+                    strokeColor: '#ff6644', strokeWeight: 10, strokeOpacity: 0.15
+                });
+                this.map.add(glowLine);
             }
 
             let startTime = null;
             let eventTriggered = false;
-            let frameCount = 0; // 轨迹更新节流计数器
+            let frameCount = 0;
+            const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-            // 1. 触发高德原生的变焦与位移飞越动画（硬件加速，平滑过渡，持续时间严格等于我们计算的 duration）
-            this.map.setZoomAndCenter(zoomInLevel, endPos, false, duration);
-
-            // 缓动函数
-            const easeInOutCubic = (t) => {
-                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-            };
-
-            // 2. 通过 requestAnimationFrame 仅负责更新行进 Marker 坐标与动感轨迹线
             const animate = (currentTime) => {
                 if (!startTime) startTime = currentTime;
                 const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
+                const progress = Math.min(elapsed / durationMs, 1);
                 const easedProgress = easeInOutCubic(progress);
                 frameCount++;
 
@@ -268,25 +288,22 @@ export default class AMapManager {
                 const currentLat = startPos.getLat() + (endPos.getLat() - startPos.getLat()) * easedProgress;
                 const currentPos = new AMap.LngLat(currentLng, currentLat);
 
-                // 更新 Marker 位置（AMap setPosition 极轻量，每帧执行确保头像运动极致丝滑）
                 this.movingFootprintMarker.setPosition(currentPos);
 
-                // 3. 节流绘制行动轨迹线（每 5 帧或到达终点时才更新一次 Polyline，避免每帧高频重绘折线导致的 CPU/GPU 渲染线程卡死）
-                if (frameCount % 5 === 0 || progress >= 1) {
+                if (frameCount % 3 === 0 || progress >= 1) {
                     const animatedPath = this.animatedTrajectory.getPath();
-                    if (animatedPath.length === 0 || animatedPath[animatedPath.length - 1].toString() !== currentPos.toString()) {
-                        animatedPath.push(currentPos);
-                        this.animatedTrajectory.setPath(animatedPath);
-                    }
+                    animatedPath.push(currentPos);
+                    this.animatedTrajectory.setPath(animatedPath);
                 }
+
+                if (glowLine) glowLine.setPath([startPos, currentPos]);
 
                 if (progress < 1) {
                     requestAnimationFrame(animate);
                 } else {
-                    // 到达目的地，稍微留白缓冲
-                    setTimeout(() => {
-                        resolve();
-                    }, 200);
+                    if (previewLine) this.map.remove(previewLine);
+                    if (glowLine) this.map.remove(glowLine);
+                    resolve();
                 }
             };
 
@@ -319,7 +336,6 @@ export default class AMapManager {
     hideAnimatedTrajectory() {
         if (this.animatedTrajectory && this.animatedTrajectory.hide) {
             this.animatedTrajectory.hide();
-            this.animatedTrajectory.setPath([]); // Clear path when hidden
         }
         if (this.staticTrajectory && this.staticTrajectory.show) {
             this.staticTrajectory.show();

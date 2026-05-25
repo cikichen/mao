@@ -195,7 +195,7 @@ export default class LeafletMapManager {
     }
 
     animateFootprint(startEvent, endEvent) {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
             if (!startEvent || !endEvent || !startEvent.coordinates || !endEvent.coordinates) {
                 resolve();
                 return;
@@ -213,80 +213,107 @@ export default class LeafletMapManager {
                 return;
             }
 
-            let targetZoom, totalDuration;
-            const currentZoom = this.map.getZoom();
-
-            // 阶梯式距离-变焦与时间自适应法则（让同城微距事件聚焦街区，长途跃迁展示宏观，且保证短途也有平移动效）
-            if (distance < 1500) {          // < 1.5km - 极近距离
-                targetZoom = 15;
-                totalDuration = 2000;       // 保证至少有2秒看清位移与连线
-            } else if (distance < 10000) {  // 1.5km - 10km
-                targetZoom = 13;
-                totalDuration = 2200;
-            } else if (distance < 50000) {  // 10km - 50km
-                targetZoom = 11;
-                totalDuration = 2500;
-            } else if (distance < 200000) { // 50km - 200km
-                targetZoom = 9;
-                totalDuration = 2800;
-            } else if (distance < 600000) { // 200km - 600km
-                targetZoom = 7;
-                totalDuration = 3300;
-            } else {                        // >= 600km - 跨大半个中国
-                targetZoom = 5;
-                totalDuration = 4000;
-            }
-
+            // 确保足迹 Marker 存在
             if (!this.movingFootprintMarker) {
                 this.movingFootprintMarker = L.marker(startPos, {
                     icon: L.divIcon({
                         className: 'mao-footprint-icon',
                         html: `
-                            <div class="mao-footprint-container">
-                                <svg viewBox="0 0 100 100" width="32" height="32" xmlns="http://www.w3.org/2000/svg" style="display: block;">
-                                    <circle cx="50" cy="50" r="46" fill="#d32f2f" stroke="#ffd700" stroke-width="4"/>
-                                    <ellipse cx="50" cy="65" rx="30" ry="12" fill="rgba(0,0,0,0.25)"/>
-                                    <path d="M 24,55 C 24,35 34,26 50,26 C 66,26 76,35 76,55 Z" fill="#8ca0ba" stroke="#2c3e50" stroke-width="3"/>
-                                    <path d="M 50,26 L 50,55 M 34,36 L 50,55 M 66,36 L 50,55" stroke="#2c3e50" stroke-width="2" stroke-linecap="round"/>
-                                    <path d="M 18,54 C 18,54 28,62 50,62 C 72,62 82,54 82,54 C 82,54 74,68 50,68 C 26,68 18,54 18,54 Z" fill="#2c3e50"/>
-                                    <polygon points="50,33 53,40 60,40 55,44 57,51 50,47 43,51 45,44 40,40 47,40" fill="#ff1744"/>
-                                </svg>
-                            </div>
+                            <div class="mao-footprint-container"></div>
                         `,
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 16]
+                        iconSize: [36, 36],
+                        iconAnchor: [18, 18]
                     })
                 }).addTo(this.map);
             } else {
                 this.movingFootprintMarker.setLatLng(startPos);
             }
 
-            let startTime = null;
-            let eventTriggered = false;
-            let frameCount = 0; // 轨迹更新节流计数器
+            // 取消正在进行的地图动画
+            this.map.stop();
 
-            // 1. 触发地图位移动画：只有当缩放级别不需要变动且属于短距离（<50km）时，才执行 panTo。
-            // 只要缩放值发生改变，一律统一由 flyTo 独自管理（彻底杜绝 panTo 与 setZoom 冲突引起的画面疯狂震颤与花屏）
-            if (distance < 50000 && this.map.getZoom() === targetZoom) {
-                this.map.panTo(endPos, {
-                    animate: true,
-                    duration: totalDuration / 1000
-                });
-            } else {
-                this.map.flyTo(endPos, targetZoom, {
-                    duration: totalDuration / 1000,
-                    easeLinearity: 0.25
-                });
+            // 获取动画参数
+            const params = this._getAnimParams(distance);
+
+            // ── 第一幕：镜头拉远 ── 平滑缩放到鸟瞰视野（同时看见起点和终点）
+            // 缩放期间从地图移除轨迹线，彻底防止 SVG 缩放导致线条变粗
+            if (this.animatedTrajectory) this.animatedTrajectory.removeFrom(this.map);
+            if (this.completedTrajectory) this.completedTrajectory.removeFrom(this.map);
+            const bounds = L.latLngBounds([startPos, endPos]);
+            await this._smoothFlyToBounds(bounds.pad(0.3), params.overviewDur, params.maxOverviewZoom);
+            if (this.animatedTrajectory) this.animatedTrajectory.addTo(this.map);
+            if (this.completedTrajectory) this.completedTrajectory.addTo(this.map);
+
+            // ── 第二幕：足迹行进 ── 在完全稳定的视口上，Marker 滑动 + 画轨迹线
+            await this._traverseMarker(startPos, endPos, endEvent, params.markerDur, distance);
+
+            // ── 第三幕：镜头推近 ── 平滑聚焦到目的地近景
+            if (this.animatedTrajectory) this.animatedTrajectory.removeFrom(this.map);
+            if (this.completedTrajectory) this.completedTrajectory.removeFrom(this.map);
+            await this._smoothFlyTo(endPos, params.destZoom, params.zoomInDur);
+            if (this.animatedTrajectory) this.animatedTrajectory.addTo(this.map);
+            if (this.completedTrajectory) this.completedTrajectory.addTo(this.map);
+
+            resolve();
+        });
+    }
+
+    // 根据距离返回三幕各阶段的时间参数
+    _getAnimParams(distance) {
+        if (distance < 1500)   return { overviewDur: 0.5, markerDur: 1500, destZoom: 15, zoomInDur: 0.4, maxOverviewZoom: 16 };
+        if (distance < 10000)  return { overviewDur: 0.6, markerDur: 1800, destZoom: 14, zoomInDur: 0.5, maxOverviewZoom: 15 };
+        if (distance < 50000)  return { overviewDur: 0.7, markerDur: 2000, destZoom: 13, zoomInDur: 0.6, maxOverviewZoom: 13 };
+        if (distance < 200000) return { overviewDur: 0.8, markerDur: 2200, destZoom: 13, zoomInDur: 0.8, maxOverviewZoom: 11 };
+        if (distance < 600000) return { overviewDur: 0.8, markerDur: 2500, destZoom: 12, zoomInDur: 0.8, maxOverviewZoom: 9 };
+        return                        { overviewDur: 1.0, markerDur: 3000, destZoom: 12, zoomInDur: 1.0, maxOverviewZoom: 7 };
+    }
+
+    // 平滑缩放到指定边界（第一幕辅助）
+    _smoothFlyToBounds(bounds, durationSec, maxZoom) {
+        return new Promise(resolve => {
+            const timeout = setTimeout(resolve, durationSec * 1000 + 500);
+            this.map.once('moveend', () => { clearTimeout(timeout); resolve(); });
+            this.map.flyToBounds(bounds, {
+                duration: durationSec,
+                maxZoom: maxZoom,
+                padding: [50, 50]
+            });
+        });
+    }
+
+    // 平滑飞到指定位置和缩放（第三幕辅助）
+    _smoothFlyTo(pos, zoom, durationSec) {
+        return new Promise(resolve => {
+            const timeout = setTimeout(resolve, durationSec * 1000 + 500);
+            this.map.once('moveend', () => { clearTimeout(timeout); resolve(); });
+            this.map.flyTo(pos, zoom, { duration: durationSec });
+        });
+    }
+
+    // Marker 行进动画（第二幕核心）—— 地图完全静止，零缩放变化
+    _traverseMarker(startPos, endPos, endEvent, durationMs, distance) {
+        return new Promise(resolve => {
+            // 远距离（≥200km）添加预览航线和发光效果
+            let previewLine = null;
+            let glowLine = null;
+            if (distance >= 200000) {
+                previewLine = L.polyline([startPos, endPos], {
+                    color: '#ff4444', weight: 1.5, opacity: 0.25, dashArray: '8 6'
+                }).addTo(this.map);
+                glowLine = L.polyline([startPos], {
+                    color: '#ff6644', weight: 10, opacity: 0.15
+                }).addTo(this.map);
             }
 
-            // 三次缓动函数，与地图自身的平移加速度完全对齐
+            let startTime = null;
+            let eventTriggered = false;
+            let frameCount = 0;
             const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-            // 2. 通过 requestAnimationFrame 只更新 Marker 位置与画轨迹线
             const animate = (currentTime) => {
                 if (!startTime) startTime = currentTime;
                 const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / totalDuration, 1);
+                const progress = Math.min(elapsed / durationMs, 1);
                 const easedProgress = easeInOutCubic(progress);
                 frameCount++;
 
@@ -295,36 +322,50 @@ export default class LeafletMapManager {
                     eventTriggered = true;
                 }
 
-                // 采用 easedProgress 消除 Marker 与地图背景滑移的割裂撕裂感
                 const lat = startPos.lat + (endPos.lat - startPos.lat) * easedProgress;
                 const lng = startPos.lng + (endPos.lng - startPos.lng) * easedProgress;
                 const currentPos = L.latLng(lat, lng);
 
-                // 只更新足迹点坐标（Marker 的 setLatLng 极轻量，每帧执行确保头像运动极致丝滑）
                 this.movingFootprintMarker.setLatLng(currentPos);
 
-                // 3. 节流绘制行动轨迹线（每 5 帧或到达终点时才更新一次 Polyline，避免每帧高频重绘折线导致的 CPU/GPU 渲染线程卡死）
-                if (frameCount % 5 === 0 || progress >= 1) {
+                // 每 3 帧绘制当前段的动画轨迹线
+                if (frameCount % 3 === 0 || progress >= 1) {
                     if (!this.animatedTrajectory) {
                         this.animatedTrajectory = L.polyline([startPos], {
                             color: '#ff4444', weight: 3, opacity: 0.8
                         }).addTo(this.map);
                     }
                     const path = this.animatedTrajectory.getLatLngs();
-                    const last = path[path.length - 1];
-                    if (!last || last.distanceTo(currentPos) > 500) {
-                        path.push(currentPos);
-                        this.animatedTrajectory.setLatLngs(path);
-                    }
+                    path.push(currentPos);
+                    this.animatedTrajectory.setLatLngs(path);
                 }
+
+                // 更新发光层
+                if (glowLine) glowLine.setLatLngs([startPos, currentPos]);
 
                 if (progress < 1) {
                     requestAnimationFrame(animate);
                 } else {
-                    // 到达目的地，稍作停留后完成 Promise
-                    setTimeout(() => {
-                        resolve();
-                    }, 200);
+                    // 动画结束：将当前段推入 completedTrajectory，并清空 animatedTrajectory
+                    if (!this.completedTrajectory) {
+                        this.completedTrajectory = L.polyline([startPos, endPos], {
+                            color: '#d32f2f', weight: 3, opacity: 0.8
+                        }).addTo(this.map);
+                    } else {
+                        const compPath = this.completedTrajectory.getLatLngs();
+                        if (compPath.length === 0) compPath.push(startPos, endPos);
+                        else compPath.push(endPos);
+                        this.completedTrajectory.setLatLngs(compPath);
+                    }
+                    
+                    if (this.animatedTrajectory) {
+                        this.animatedTrajectory.setLatLngs([endPos]);
+                    }
+
+                    // 清理临时效果
+                    if (previewLine) this.map.removeLayer(previewLine);
+                    if (glowLine) this.map.removeLayer(glowLine);
+                    resolve();
                 }
             };
 
@@ -334,11 +375,13 @@ export default class LeafletMapManager {
 
     showAnimatedTrajectory() {
         if (this.animatedTrajectory) this.animatedTrajectory.addTo(this.map);
+        if (this.completedTrajectory) this.completedTrajectory.addTo(this.map);
         if (this.staticTrajectory) { this.map.removeLayer(this.staticTrajectory); this.staticTrajectory = null; }
     }
 
     hideAnimatedTrajectory() {
         if (this.animatedTrajectory) { this.map.removeLayer(this.animatedTrajectory); }
+        if (this.completedTrajectory) { this.map.removeLayer(this.completedTrajectory); }
     }
 
     clearAnimatedTrajectory() {
@@ -349,6 +392,10 @@ export default class LeafletMapManager {
         if (this.animatedTrajectory) {
             this.map.removeLayer(this.animatedTrajectory);
             this.animatedTrajectory = null;
+        }
+        if (this.completedTrajectory) {
+            this.map.removeLayer(this.completedTrajectory);
+            this.completedTrajectory = null;
         }
         if (this.staticTrajectory) {
             this.map.removeLayer(this.staticTrajectory);

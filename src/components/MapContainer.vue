@@ -158,8 +158,19 @@ watch(
 watch(
     () => playbackStore.isPlaying,
     playing => {
-        if (playing) playSequence();
-        else mapManager.value?.hideAnimatedTrajectory?.();
+        if (playing) {
+            mapManager.value?.showAnimatedTrajectory?.();
+            playSequence();
+        } else {
+            mapManager.value?.hideAnimatedTrajectory?.();
+            // 暂停或结束时，绘制截至当前的静态轨迹，防止线条完全消失
+            const idx = playbackStore.currentIndex;
+            if (idx >= 0 && mapManager.value) {
+                mapManager.value.drawStaticTrajectory(
+                    eventsStore.filteredEvents.slice(0, idx + 1)
+                );
+            }
+        }
     }
 );
 
@@ -185,6 +196,12 @@ async function playSequence() {
     eventsStore.selectEvent(next.id);
 
     await mapManager.value.animateFootprint(curr, next);
+
+    // 动画完成后更新气泡卡片（播放期间 selectedEventId 的 watch 被跳过了）
+    mapManager.value.highlightMarker(next.id);
+
+    // 每个事件停顿 1.5 秒，给用户阅读时间
+    await new Promise(r => setTimeout(r, 1500));
 
     if (playbackStore.isPlaying) playSequence();
 }

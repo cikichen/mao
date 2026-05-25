@@ -44,7 +44,7 @@
                         <h5 v-if="currentEvent.content.title">
                             <i class="fas fa-feather-pointed"></i> {{ currentEvent.content.title }}
                         </h5>
-                        <blockquote v-if="currentEvent.content.text || currentEvent.content.excerpt">
+                        <blockquote style="white-space: pre-wrap; font-family: inherit; font-size: 13.5px; margin-bottom: 0;" v-if="currentEvent.content.text || currentEvent.content.excerpt">
                             {{ currentEvent.content.text || currentEvent.content.excerpt }}
                         </blockquote>
                         <p class="event-detail__content-bg" v-if="currentEvent.content.background">
@@ -52,7 +52,7 @@
                         </p>
                     </template>
                     <template v-else-if="typeof currentEvent.content === 'string' && currentEvent.content.trim()">
-                        <blockquote style="font-family: inherit; font-size: 13.5px; margin-bottom: 0;">
+                        <blockquote style="white-space: pre-wrap; font-family: inherit; font-size: 13.5px; margin-bottom: 0;">
                             {{ currentEvent.content }}
                         </blockquote>
                     </template>
