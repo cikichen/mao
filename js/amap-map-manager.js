@@ -195,39 +195,29 @@ export default class AMapManager {
 
             // Calculate distance and determine animation strategy
             const distance = startPos.distance(endPos);
-            console.log(`AMap Distance: ${distance}m between ${startEvent.title} and ${endEvent.title}`);
-
-            // 智能动画策略分类
-            let animationType, zoomOutLevel, zoomInLevel, duration;
-
-            if (distance < 5000) { // < 5km - 同城内移动
-                animationType = 'intracity';
-                zoomOutLevel = 12; // 拉近显示街道级别
-                zoomInLevel = 14;  // 最终更近显示细节
-                duration = Math.max(1500, distance * 0.5); // 最少1.5秒
-            } else if (distance < 50000) { // 5-50km - 城际移动
-                animationType = 'intercity';
-                zoomOutLevel = 9;
+            // 阶梯式距离-变焦与时间自适应法则（让同城微距事件聚焦街区，长途跃迁展示宏观，且保证短途也有平移动效）
+            let zoomInLevel, duration;
+            if (distance < 1500) {          // < 1.5km - 极近距离
+                zoomInLevel = 15;
+                duration = 2000;            // 保证至少有2秒看清位移与连线
+            } else if (distance < 10000) {  // 1.5km - 10km
+                zoomInLevel = 13;
+                duration = 2200;
+            } else if (distance < 50000) {  // 10km - 50km
                 zoomInLevel = 11;
-                duration = Math.max(2000, distance * 0.08);
-            } else if (distance < 200000) { // 50-200km - 省内移动
-                animationType = 'intraprovince';
-                zoomOutLevel = 7;
-                zoomInLevel = 10;
-                duration = Math.max(2500, distance * 0.015);
-            } else if (distance < 1000000) { // 200km-1000km - 跨省移动
-                animationType = 'interprovince';
-                zoomOutLevel = 5;
+                duration = 2500;
+            } else if (distance < 200000) { // 50km - 200km
                 zoomInLevel = 9;
-                duration = Math.max(3000, distance * 0.005);
-            } else { // > 1000km - 长距离移动
-                animationType = 'longdistance';
-                zoomOutLevel = 4;
-                zoomInLevel = 8;
-                duration = Math.max(4000, Math.min(6000, distance * 0.003)); // 最多6秒
+                duration = 2800;
+            } else if (distance < 600000) { // 200km - 600km
+                zoomInLevel = 7;
+                duration = 3300;
+            } else {                        // >= 600km - 跨大半个中国
+                zoomInLevel = 5;
+                duration = 4000;
             }
 
-            console.log(`AMap Animation type: ${animationType}, duration: ${duration}ms, zoom: ${zoomOutLevel}->${zoomInLevel}`);
+            console.log(`AMap Distance: ${distance}m, duration: ${duration}ms, zoom: ${zoomInLevel}`);
 
             if (!this.movingFootprintMarker) {
                 this.movingFootprintMarker = new AMap.Marker({
@@ -253,13 +243,8 @@ export default class AMapManager {
             let eventTriggered = false;
             let frameCount = 0; // 轨迹更新节流计数器
 
-            // 1. 触发地图位移动画：只有当缩放级别不需要变动且属于中短距离（<50km）时，才单独调用 panTo。
-            // 只要缩放值发生改变，一律统一由 setZoomAndCenter 独自管理（彻底杜绝 panTo 与 setZoom 冲突引起的画面疯狂震颤与花屏）
-            if (distance < 50000 && this.map.getZoom() === zoomInLevel) {
-                this.map.panTo(endPos);
-            } else {
-                this.map.setZoomAndCenter(zoomInLevel, endPos);
-            }
+            // 1. 触发高德原生的变焦与位移飞越动画（硬件加速，平滑过渡，持续时间严格等于我们计算的 duration）
+            this.map.setZoomAndCenter(zoomInLevel, endPos, false, duration);
 
             // 缓动函数
             const easeInOutCubic = (t) => {

@@ -40,13 +40,30 @@
         <!-- 时间轴轨道 -->
         <div class="timeline__track-wrap">
             <div class="timeline__years">
-                <span>{{ startYear }}</span>
-                <span>{{ endYear }}</span>
+                <span>1893 诞辰</span>
+                <span>1911 辛亥</span>
+                <span>1921 建党</span>
+                <span>1935 遵义</span>
+                <span>1949 建国</span>
+                <span>1976 逝世</span>
             </div>
 
             <div class="timeline__track" :style="{ '--progress': `${progressPct}%` }">
                 <div class="timeline__track-bg"></div>
                 <div class="timeline__track-fill" :class="{ playing: playback.isPlaying }"></div>
+                
+                <!-- 年份历史事件锚点图层 -->
+                <div class="timeline__event-dots">
+                    <span 
+                        v-for="event in events" 
+                        :key="event.id"
+                        class="timeline__event-dot"
+                        :style="{ left: `${getEventPct(event)}%` }"
+                        :class="{ active: event.id === currentEvent?.id }"
+                        :title="event.title"
+                    ></span>
+                </div>
+
                 <div class="timeline__track-thumb">
                     <span class="timeline__thumb-dot"></span>
                 </div>
@@ -97,7 +114,24 @@ const stateLabel = computed(() => {
 const startYear = computed(() => events.value[0]?.date?.split('-')[0] || '1893');
 const endYear = computed(() => events.value[events.value.length - 1]?.date?.split('-')[0] || '1976');
 const speedLabel = computed(() => `${playback.playSpeed}x`);
-const progressPct = computed(() => events.value.length <= 1 ? 0 : (playback.currentIndex / (events.value.length - 1)) * 100);
+
+// 重构为真实生平年份跨度比例 (1893 - 1976)
+const progressPct = computed(() => {
+    if (!events.value.length || !currentEvent.value?.date) return 0;
+    const year = parseInt(currentYear.value, 10);
+    const start = 1893;
+    const end = 1976;
+    return ((year - start) / (end - start)) * 100;
+});
+
+// 计算每个历史事件在时间轴轨道上的真实年代比例分布
+const getEventPct = (event) => {
+    if (!event?.date) return 0;
+    const year = parseInt(event.date.split('-')[0], 10);
+    const start = 1893;
+    const end = 1976;
+    return ((year - start) / (end - start)) * 100;
+};
 
 function togglePlay() { playback.togglePlay(); }
 function cycleSpeed() { playback.cycleSpeed(); }
@@ -284,6 +318,39 @@ function nextEvent() {
     height: 24px;
     display: flex;
     align-items: center;
+}
+
+/* 历史年份事件锚点线 */
+.timeline__event-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.timeline__event-dot {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1.5px solid rgba(18, 18, 18, 0.85);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: all var(--transition-normal);
+}
+
+.timeline__event-dot.active {
+    background: var(--color-primary-light);
+    box-shadow: 0 0 10px var(--color-primary-light);
+    width: 8px;
+    height: 8px;
+    border-color: #fff;
+    z-index: 2;
 }
 
 .timeline__track-bg,

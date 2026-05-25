@@ -216,18 +216,25 @@ export default class LeafletMapManager {
             let targetZoom, totalDuration;
             const currentZoom = this.map.getZoom();
 
-            if (distance > 500000) {
-                targetZoom = distance > 1000000 ? 5 : distance > 800000 ? 6 : 7;
-                totalDuration = Math.max(3000, Math.min(5000, distance * 0.002));
-            } else if (distance < 10000) {
-                targetZoom = Math.max(14, Math.min(16, currentZoom + 2));
-                totalDuration = Math.max(1500, Math.min(2500, distance * 0.15));
-            } else if (distance < 100000) {
-                targetZoom = Math.max(10, Math.min(12, currentZoom));
-                totalDuration = Math.max(2000, Math.min(3000, distance * 0.02));
-            } else {
-                targetZoom = Math.max(8, Math.min(10, currentZoom));
-                totalDuration = Math.max(2500, Math.min(4000, distance * 0.005));
+            // 阶梯式距离-变焦与时间自适应法则（让同城微距事件聚焦街区，长途跃迁展示宏观，且保证短途也有平移动效）
+            if (distance < 1500) {          // < 1.5km - 极近距离
+                targetZoom = 15;
+                totalDuration = 2000;       // 保证至少有2秒看清位移与连线
+            } else if (distance < 10000) {  // 1.5km - 10km
+                targetZoom = 13;
+                totalDuration = 2200;
+            } else if (distance < 50000) {  // 10km - 50km
+                targetZoom = 11;
+                totalDuration = 2500;
+            } else if (distance < 200000) { // 50km - 200km
+                targetZoom = 9;
+                totalDuration = 2800;
+            } else if (distance < 600000) { // 200km - 600km
+                targetZoom = 7;
+                totalDuration = 3300;
+            } else {                        // >= 600km - 跨大半个中国
+                targetZoom = 5;
+                totalDuration = 4000;
             }
 
             if (!this.movingFootprintMarker) {
